@@ -1,4 +1,3 @@
-# RaspiPgmLog
 # H1 RaspiPgmLog
 
 # H2 a Raspberrypi to ICSP Microchip microcontrollers through ICSP and JTAG (and SNAP).

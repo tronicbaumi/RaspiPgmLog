@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+    <head>
+        <title>RaspiPgmLog</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" type="text/css" href="/bootstrap/css/bootstrap.min.css">
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="/scripts/jquery-3.4.1.min.js"></script>
+        <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+        <script src="/scripts/graph.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <div id="chart"></div>
+                </div>
+            </div> 
+            <div class="row">
+                <div class="col">
+                    <div class="input-group mb-3">
+                        <select class="custom-select" id="sampletime_select">
+                            <option value="10">10 ms</option>
+                            <option value="20">20 ms</option>
+                            <option value="50">50 ms</option>
+                            <option value="100" selected>100 ms</option>
+                            <option value="200">200 ms</option>
+                            <option value="500">500 ms</option>
+                            <option value="1000">1 s</option>
+                            <option value="20000">20 s</option>
+                            <option value="60000">1 min</option>
+                        </select>
+                        <div class="input-group-append">
+                            <label class="input-group-text" for="sampletime_select">
+                                Selection takes effect, when starting the logging
+                            </label>
+                        </div>
+                    </div>        
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <button class="btn btn-primary" id="start">Start</button>
+                    <button class="btn btn-danger" id="stop">Stop</button>
+                    <button class="btn btn-warning" id="pause">Pause</button>
+                </div>
+                <div class="col d-flex justify-content-end">
+                    <a href="/downloadfile"><button id="downloadfile" class="btn btn-success" disabled>Download latest file</button></a>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

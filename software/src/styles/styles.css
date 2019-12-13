@@ -1,0 +1,17 @@
+/*
+style for the command output "console"
+*/
+#command_output{
+    border: 1px solid black;
+    height: 20rem;
+    list-style: none;
+    padding-left: 5px;
+    overflow: scroll;
+}
+
+/*
+class to apply for not filled in form elements
+*/
+.error{
+    border-color: red;
+}

@@ -1,0 +1,10 @@
+[Unit]
+Description=Show Ip address and hostname on inkyPHAT display
+After=multi-user.target
+
+[Service]
+Type=idle
+ExecStart=/usr/bin/python3 /home/pi/.local/resources/display.py
+
+[Install]
+WantedBy=multi-user.target

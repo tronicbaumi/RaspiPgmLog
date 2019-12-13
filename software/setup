@@ -1,0 +1,23 @@
+#!bin/bash
+
+rm /var/www/html/index.html
+echo "cleaned target directory"
+
+cp -r src/* /var/www/html/
+mkdir /var/www/html/upload
+mkdir /var/www/html/download
+mkdir /var/www/html/logs
+echo "copied source files"
+
+chown -R pi:pi /var/www/html
+echo "adjusted ownerships"
+
+chmod -R 777 /var/www/html/upload
+chmod -R 777 /var/www/html/download
+chmod -R 777 /var/www/html/logs
+echo "adjusted rights"
+
+cp 010_RaspiPgmLog_commands-nopasswd /etc/sudoers.d
+chown root:root /etc/sudoers.d/010_RaspiPgmLog_commands-nopasswd
+chmod 0440 /etc/sudoers.d/010_RaspiPgmLog_commands-nopasswd
+echo "setup needed commands"

@@ -1,0 +1,10 @@
+#!bin/bash
+
+mkdir /home/pi/.local
+mkdir /home/pi/.local/resources
+cp display.py /home/pi/.local/resources/
+cp NotoMono-Regular.ttf /home/pi/.local/resources/
+cp inky_display.service /lib/systemd/system/
+chmod 644 /lib/systemd/system/inky_display.service
+systemctl daemon-reload
+systemctl enable inky_display.service

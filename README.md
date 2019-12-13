@@ -1,6 +1,6 @@
-#H1 RaspiPgmLog
+# RaspiPgmLog
 
-#H2 a Raspberrypi to ICSP Microchip microcontrollers through ICSP and JTAG (and SNAP).
+## a Raspberrypi to in circuit serial program (ICSP) Microchip microcontrollers through the ICSP and JTAG Interface. (SNAP may be supported in the future)
 Additionally an Arduino can be connected to the Raspberrypi for datalogging. 
 RaspiPgmLog uses a web based userinterface which allows to use any kind of browser to upload a HEX file to program the device and to visualize the logged data. 
   

@@ -1,0 +1,12 @@
+[Unit]
+Description=Start Node Server
+After=multi-user.target
+
+[Service]
+WorkingDirectory=/var/www/html/socket
+ExecStart=/usr/local/bin/npm start
+Restart=on-failure
+User=root
+
+[Install]
+WantedBy=multi-user.target

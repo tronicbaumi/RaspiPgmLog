@@ -170,8 +170,7 @@ Out()->Add(<<<EOT
     <div class="col d-flex justify-content-end">
         <a href="?url=downloads"><button type="button" class="btn btn-primary">Download Files</button></a>
     </div>
-    <div class="row">
-        <a href="?url=gotograph"><button type="button" class="btn btn-primary">Data Logger</button></a>
-    </div>
 EOT
 );
+
+Out()->Add('<div class="row"><a href="http://'. $_SERVER['SERVER_ADDR'] . ':3000"><button type="button" class="btn btn-primary">Data Logger</button></a></div>');

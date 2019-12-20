@@ -42,13 +42,13 @@ class dspic33ck : public Pic{
 		void send_cmd(uint32_t cmd);
 		inline void send_prog_nop(void);
 		uint16_t read_data(void);
-        inline void send_reset(void);
+        inline void exit_reset_vector(void);
         void read_four_code_words(uint16_t *data, uint32_t addr);
         uint32_t read_config_word(uint32_t addr);
 
 		/*
 		* DEVICES SECTION
-		*                       ID       NAME           	  MEMSIZE
+		*    ID       NAME           	  MEMSIZE
 		*/
 		pic_device piclist[38] = {
             {0x7C74, "dsPIC33CK256MP508", 0x02BFFE},
@@ -90,6 +90,8 @@ class dspic33ck : public Pic{
             {0x7C01, "dsPIC33CK32MP203", 0x005FFE},
             {0x7C00, "dsPIC33CK32MP202", 0x005FFE}
         };
+        
+        // Configuration register adress endings
         uint8_t regaddr[17] = {
             0x00,
             0x10,
@@ -109,6 +111,8 @@ class dspic33ck : public Pic{
             0xFC,
             0x00
         };
+
+        // Configuration register names
         const char regname[17][10] = {
             "FSEC", 
             "FBSLIM", 

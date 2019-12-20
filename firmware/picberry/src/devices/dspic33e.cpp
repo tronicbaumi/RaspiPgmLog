@@ -35,14 +35,14 @@
 #define DELAY_P4A			1		// 40ns
 #define DELAY_P5			1		// 20ns
 #define DELAY_P6			1		// 100ns
-#define DELAY_P7_DSPIC33E	50000	// 25ms
+#define DELAY_P7_DSPIC33E	25000	// 25ms
 #define DELAY_P7_PIC24FJ	50000	// 50ms
 #define DELAY_P8			12		// 12us
 #define DELAY_P9A			10		// 10us
 #define DELAY_P9B			15		// 15us - 23us max!
 #define DELAY_P10			1		// 400ns
-#define DELAY_P11_DSPIC33E	21000	// 21ms
-#define DELAY_P11_PIC24FJ	21000	// 21ms
+#define DELAY_P11_DSPIC33E	116000	// 116ms
+#define DELAY_P11_PIC24FJ	25000	// 25ms
 #define DELAY_P12_DSPIC33E	23000	// 23ms
 #define DELAY_P12_PIC24FJ	25000	// 25ms
 #define DELAY_P13_DSPIC33E	1600	// 1.6ms
@@ -50,10 +50,10 @@
 #define DELAY_P14			1		// 1us MAX!
 #define DELAY_P15			1		// 10ns
 #define DELAY_P16			0		// 0s
-#define DELAY_P17   		1		// 100ns
+#define DELAY_P17   		0		// 0s - 100ns MAX!
 #define DELAY_P18			1000	// 1ms
 #define DELAY_P19			1		// 25ns
-//#define DELAY_P20			25000	// 25ms
+#define DELAY_P20			25000	// 25ms
 #define DELAY_P21			1		// 1us - 500us MAX!
 
 #define ENTER_PROGRAM_KEY	0x4D434851
@@ -855,7 +855,7 @@ void dspic33e::write(char *infile)
 			send_nop();
 			send_nop();
 
-			//delay_us(DELAY_P20);
+			delay_us(DELAY_P20);
 
 			do{
 				send_nop();

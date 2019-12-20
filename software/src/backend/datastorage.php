@@ -66,3 +66,24 @@ $cortex_m_actions = array(
 $cortex_m_options = array(
     'd3' => 'debug'
 );
+
+$pymcuprog_chips = array(
+    'atsamd21'
+);
+
+$pymcuprog_actions = array(
+    'ping' => 'Ping',
+    'erase' => 'Erase',
+    'read' => 'Read',
+    'write' => 'Write'
+);
+
+$pymcuprog_programmers = array(
+    'pickit4'   => 'MPLAB PicKit4',
+    'snap'      => 'MPLAB Snap'
+);
+
+$pymcuprog_options = array(
+    'verbose' => 'Verbose Output',
+    'verbosedebug' => 'Verbose debug Output'
+);

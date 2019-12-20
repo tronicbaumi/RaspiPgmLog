@@ -60,6 +60,9 @@
 static unsigned int counter=0;
 static uint16_t nvmcon;
 
+/*
+ * send a 24-bit command via the SIX instruction
+ */
 void dspic33ck::send_cmd(uint32_t cmd)
 {
 	uint8_t i;
@@ -108,6 +111,9 @@ inline void dspic33ck::send_prog_nop(void)
 	}
 }
 
+/*
+ * Read out the VISI register via the REGOUT instruction
+ */
 uint16_t dspic33ck::read_data(void)
 {
 	uint8_t i;
@@ -156,6 +162,9 @@ uint16_t dspic33ck::read_data(void)
 	return data;
 }
 
+/*
+ * Enter ICSP Mode
+ */
 void dspic33ck::enter_program_mode(void){
     int i;
 
@@ -198,6 +207,9 @@ void dspic33ck::enter_program_mode(void){
 
 }
 
+/*
+ * Exit ICSP Mode
+ */
 void dspic33ck::exit_program_mode(void)
 {
 	GPIO_CLR(pic_clk);
@@ -206,10 +218,13 @@ void dspic33ck::exit_program_mode(void)
 	GPIO_CLR(pic_mclr);		/* remove VDD from MCLR pin */
 	delay_us(DELAY_P17);	/* wait (at least) P17 */
 	GPIO_SET(pic_mclr);
-	//GPIO_IN(pic_mclr);
+	GPIO_IN(pic_mclr);
 }
 
-inline void dspic33ck::send_reset(void)
+/*
+ * Send a GOTO 0x200 command, before and after programming operations
+ */
+inline void dspic33ck::exit_reset_vector(void)
 {
 	send_nop();
 	send_nop();
@@ -220,12 +235,15 @@ inline void dspic33ck::send_reset(void)
 	send_nop();
 }
 
+/*
+ * read four 24-bit words (8-bit + 16-bit) from code memory and store them in the data array
+ */
 void dspic33ck::read_four_code_words(uint16_t *data, uint32_t addr)
 {
 	uint16_t raw_data[6];
 
 	/* exit reset vector */
-	send_reset();
+	exit_reset_vector();
 
 	/* Initialize the TBLPAG register and the Read Pointer (W6) for the TBLRD instruction*/
 	send_cmd(0x200000 | ((addr & 0x00FF0000) >> 12) );	// MOV #<DestAddress23:16>, W0
@@ -293,9 +311,20 @@ void dspic33ck::read_four_code_words(uint16_t *data, uint32_t addr)
 	}
 
 	/*Reset the device’s internal PC*/
-	send_reset();
+	exit_reset_vector();
 
-	/* store data correctly */
+	/*
+	 * raw_data comes in "packed data format":
+	 * LSWx: Least Significant 16 bits of instruction word
+	 * MSBx: Most Significant Byte of instruction word
+	 * 	  LSW0
+	 * MSB1 | MSB0
+	 *    LSW1
+	 * 	  LSW2
+	 * MSB3 | MSB2
+	 *    LSW3
+	 * so we need to store data correctly to be able to process it correctly 
+	 */
 	data[0] = raw_data[0];
 	data[1] = raw_data[1] & 0x00FF;
 	data[3] = (raw_data[1] & 0xFF00) >> 8;
@@ -306,17 +335,23 @@ void dspic33ck::read_four_code_words(uint16_t *data, uint32_t addr)
 	data[6] = raw_data[5];
 }
 
+/*
+ * Read a 24-bit configuration word and reaturn it
+ */
 uint32_t dspic33ck::read_config_word(uint32_t addr)
 {
 	uint16_t data_head, data_body;
 
-	send_reset();
+	/*  Exit the Reset vector */
+	exit_reset_vector();
 
+	/*  Initialize the TBLPAG register, the Write Pointer (W7) and the Read Pointer (W6) for the TBLRD instruction. */
 	send_cmd(0x200000 | ((addr & 0x00FF0000) >> 12));
 	send_cmd(0x20FCC7);
 	send_cmd(0x8802A0);
 	send_cmd(0x200006 | ((addr & 0x0000FFFF) << 4));
 	
+	/* Store the Configuration register and send the contents of the VISI register. */
 	send_nop();
 	send_cmd(0xBA8B96);
 	send_nop();
@@ -324,7 +359,7 @@ uint32_t dspic33ck::read_config_word(uint32_t addr)
 	send_nop();
 	send_nop();
 	send_nop();
-	data_head = read_data();
+	data_head = read_data(); // read upper byte
 
 	send_cmd(0xBA0B96);
 	send_nop();
@@ -332,11 +367,14 @@ uint32_t dspic33ck::read_config_word(uint32_t addr)
 	send_nop();
 	send_nop();
 	send_nop();
-	data_body = read_data();
+	data_body = read_data(); // read lower word
 
 	return ((data_head << 16) | data_body);
 }
 
+/*
+ * Read the device ID and Revision and setup the application internal memory for the individual device 
+ */
 bool dspic33ck::read_device_id(void)
 {
 	bool found = 0;
@@ -350,7 +388,7 @@ bool dspic33ck::read_device_id(void)
 
 			strcpy(name, piclist[i].name);
 			mem.code_memory_size = piclist[i].code_memory_size;
-			mem.program_memory_size = 0x00F80018;
+			mem.program_memory_size = 0x00801800;
 			mem.location = (uint16_t*) calloc(mem.program_memory_size,sizeof(uint16_t));
 			mem.filled = (bool*) calloc(mem.program_memory_size,sizeof(bool));
 			found = 1;
@@ -361,15 +399,21 @@ bool dspic33ck::read_device_id(void)
 	return found;
 }
 
+/*
+ * Erase all user code memory and reset configuration registers
+ */
 void dspic33ck::bulk_erase(void)
 {
-	send_reset();
+	/* Exit the Reset vector */
+	exit_reset_vector();
 
+	/* Set the NVMCON register to erase all user program memory. */
 	send_cmd(0x2400EA);
 	send_cmd(0x88468A);
 	send_nop();
 	send_nop();
 
+	/* Initiate the erase cycle */
 	send_cmd(0x20055A);
 	send_cmd(0x8846BA);
 	send_cmd(0x200AAA);
@@ -381,6 +425,7 @@ void dspic33ck::bulk_erase(void)
 
 	delay_us(DELAY_P11);
 
+	/* Generate clock pulses for the code memory Bulk Erase operation to complete until the WR bit is clear */
 	do{
 		send_nop();
 		send_cmd(0x804680);
@@ -388,14 +433,19 @@ void dspic33ck::bulk_erase(void)
 		send_cmd(0x887E60);
 		send_nop();
 		nvmcon = read_data();
-		send_reset();
+		exit_reset_vector();
 	} while((nvmcon & 0x8000) == 0x8000);
 	
 	if(flags.client) fprintf(stdout, "@FIN");
 }
 
+/*
+ * Read all configuration registers and output them to the console.
+ * The output will not be saved anywhere
+ */
 void dspic33ck::dump_configuration_registers(void)
 {
+	/* The configuration registers are always stored in the last 0xFE */
 	uint32_t addr = mem.code_memory_size - 0xFE;
 	uint32_t data = 0;
 
@@ -403,7 +453,7 @@ void dspic33ck::dump_configuration_registers(void)
 	for(unsigned short i=0; i<17; i++){
 
 		data = read_config_word(addr | regaddr[i]);
-		fprintf(stderr," - %s: 0x%02x\n", regname[i], data);
+		fprintf(stderr," - %s: 0x%06x\n", regname[i], data);
 
 		if(i == 15){
 			addr = 0x801800;
@@ -493,7 +543,7 @@ void dspic33ck::read(char *outfile, uint32_t start, uint32_t count)
 
 void dspic33ck::write(char *infile)
 {
-	uint16_t i,j,p;
+	uint16_t i,j;
 	uint16_t data[8];
 	uint32_t addr = 0;
 	uint32_t temp_addr = 0;
@@ -508,7 +558,7 @@ void dspic33ck::write(char *infile)
 	delay_us(100000);
 
 	/* Exit reset vector */
-	send_reset();
+	exit_reset_vector();
 
 	/* Initialize the TBLPAG register for writing to the latches*/
 	send_cmd(0x200FAC);
@@ -519,7 +569,7 @@ void dspic33ck::write(char *infile)
 	if(flags.client) fprintf(stdout, "@000");
 	counter=0;
 
-	for (addr = 0; addr < 0x0F/*mem.code_memory_size*/; ){
+	for (addr = 0; addr < mem.code_memory_size; ){
 
 		/*if nothing to write, skip*/
 		while(!mem.filled[addr]) addr++;
@@ -536,10 +586,6 @@ void dspic33ck::write(char *infile)
 		send_cmd(0x200000 | (data[0] << 4));
 		send_cmd(0x200001 | (0x00FFFF & ((data[3] << 8) | (data[1] & 0x00FF))) <<4);
 		send_cmd(0x200002 | (data[2] << 4));
-
-		// fprintf(stderr,"\n  LSW1: 0x%06X ", 0x200000 | (data[0] << 4) );
-		// fprintf(stderr,"\n  MSB2/MSB1: 0x%06X ", 0x200001 | ((data[1] & 0x00FF0000) | ((data[0] & 0x00FF0000) >> 8)) );
-		// fprintf(stderr,"\n  LSW2: 0x%06X ", 0x200002 | (data[1] << 4) );
 
 		/*Set the Read Pointer (W6) and Write Pointer (W7), and load the (next set of) write latches*/
 		send_cmd(0xEB0300);
@@ -564,9 +610,6 @@ void dspic33ck::write(char *infile)
 		send_cmd(0x200004 | ((addr & 0x00FF0000) >> 12));
 		send_cmd(0x884693);
 		send_cmd(0x8846A4);
-
-		// fprintf(stderr,"\n  ADDR 15>0: 0x%06X ", 0x200003 | ((addr & 0x0000FFFF) << 4) );
-		// fprintf(stderr,"\n  ADDR 23>16: 0x%06X ", 0x200004 | ((addr & 0x00FF0000) >> 12) );
 
 		/*Set the NVMCON register to program two instruction words*/
 		send_cmd(0x24001A);
@@ -604,10 +647,6 @@ void dspic33ck::write(char *infile)
 			send_nop();
 		} while((nvmcon & 0x8000) == 0x8000);
 
-		// if(nvmcon != 0x8000){
-		// 	fprintf(stderr, "\n NVMCON: 0x%04x \n", nvmcon);
-		// }
-
 		if(counter != addr*100/filled_locations){
 			if(flags.client)
 				fprintf(stdout,"@%03d", (addr*100/(filled_locations+0x100)));
@@ -616,9 +655,10 @@ void dspic33ck::write(char *infile)
 			counter = addr*100/filled_locations;
 		}
 
-		addr += 2;
+		addr += 4;
 	}
 
+	if(!flags.debug) cerr << "[100%]";
 	if(!flags.debug) cerr << "\b\b\b\b\b\b";
 	if(flags.client) fprintf(stdout, "@100");
 
@@ -629,7 +669,7 @@ void dspic33ck::write(char *infile)
 		cerr << endl << "Writing Configuration registers..." << endl;
 
 	/*Exit the Reset vector*/
-	send_reset();
+	exit_reset_vector();
 
 	/* Initialize the TBLPAG register for writing to the latches */
 	send_cmd(0x200FAC);
@@ -722,13 +762,13 @@ void dspic33ck::write(char *infile)
 
 	/* VERIFY CODE MEMORY */
 	if(!flags.noverify){
-		if(!flags.debug) cerr << "Verifying Code Memory ...";
+		if(!flags.debug) cerr << "Verifying Code Memory ...\n";
 		if(!flags.debug) cerr << "[ 0%]";
 		if(flags.client) fprintf(stdout, "@000");
 		counter = 0;
 
 		addr=0;
-		for(addr=0; addr < 0x0F/*mem.code_memory_size*/; addr=addr+8) {
+		for(addr=0; addr < mem.code_memory_size; addr=addr+8) {
 
 			read_four_code_words(data, addr);
 			
@@ -740,23 +780,20 @@ void dspic33ck::write(char *infile)
 					fprintf(stderr,"\n\n ERROR at address %06X: written %04X but %04X read!\n\n",
 									addr+i, mem.location[addr+i], data[i]);
 					//return;
-				}else if (mem.filled[addr+i])
-				{
-					fprintf(stderr,"\n\n address %06X: written %04X and %04X read!\n\n",
-									addr+i, mem.location[addr+i], data[i]);
 				}
 
 			}
 
-			if(counter != addr*100/filled_locations){
+			if(counter != addr*100/mem.code_memory_size){
+				counter = addr*100/mem.code_memory_size;
 				if(flags.client)
-					fprintf(stdout,"@%03d", (addr*100/(filled_locations+0x100)));
+					fprintf(stdout,"@%03d", counter);
 				if(!flags.debug)
-					fprintf(stderr,"\b\b\b\b\b[%2d%%]", addr*100/(filled_locations+0x100));
-				counter = addr*100/filled_locations;
+					fprintf(stderr,"\b\b\b\b\b[%2d%%]", counter);
 			}
 		}
 
+		if(!flags.debug) cerr << "[100%]";
 		if(!flags.debug) cerr << "\b\b\b\b\b";
 		if(flags.client) fprintf(stdout, "@FIN");
 	}
@@ -777,7 +814,7 @@ uint8_t dspic33ck::blank_check(void)
 	counter=0;
 
 	/* exit reset vector */
-	send_reset();
+	exit_reset_vector();
 
 	/* Output data to W0:W5; repeat until all desired code memory is read. */
 	for(addr=0; addr < (mem.code_memory_size - 0xFE); addr=addr+8) {
@@ -809,7 +846,7 @@ uint8_t dspic33ck::blank_check(void)
 		ret = 0;
 	};
 
-	send_reset();
+	exit_reset_vector();
 
 	return ret;
 }

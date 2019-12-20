@@ -39,6 +39,7 @@ $(document).ready(function(){
     $('#select_programmer').change(function(){
         var pic_container = $('#pic_command_container');
         var cortex_container = $('#cortex_command_container');
+        var pymcuprog_container = $('#pymcuprog_command_container');
         
         switch($(this).val()){
             case '0': // hide all 
@@ -50,11 +51,19 @@ $(document).ready(function(){
                     cortex_container.removeClass('d-block');
                     cortex_container.addClass('d-none');
                 }
+                if(pymcuprog_container.hasClass('d-block')){
+                    pymcuprog_container.removeClass('d-block');
+                    pymcuprog_container.addClass('d-none');
+                }
                 break;
             case 'picberry': // show picberry container
                 if(cortex_container.hasClass('d-block')){
                     cortex_container.removeClass('d-block');
                     cortex_container.addClass('d-none');
+                }
+                if(pymcuprog_container.hasClass('d-block')){
+                    pymcuprog_container.removeClass('d-block');
+                    pymcuprog_container.addClass('d-none');
                 }
                 if(pic_container.hasClass('d-none')){
                     pic_container.removeClass('d-none');
@@ -66,9 +75,27 @@ $(document).ready(function(){
                     pic_container.removeClass('d-block');
                     pic_container.addClass('d-none');
                 }
+                if(pymcuprog_container.hasClass('d-block')){
+                    pymcuprog_container.removeClass('d-block');
+                    pymcuprog_container.addClass('d-none');
+                }
                 if(cortex_container.hasClass('d-none')){
                     cortex_container.removeClass('d-none');
                     cortex_container.addClass('d-block');
+                }
+                break;
+            case 'pymcuprog':
+                if(pic_container.hasClass('d-block')){
+                    pic_container.removeClass('d-block');
+                    pic_container.addClass('d-none');
+                }
+                if(cortex_container.hasClass('d-block')){
+                    cortex_container.removeClass('d-block');
+                    cortex_container.addClass('d-none');
+                }
+                if(pymcuprog_container.hasClass('d-none')){
+                    pymcuprog_container.hasClass('d-none');
+                    pymcuprog_container.addClass('d-block');
                 }
                 break;
         }
@@ -82,6 +109,8 @@ $(document).ready(function(){
             command_form = $('#command_form_pic');
         }else if($('#select_programmer').val() === 'openocd'){
             command_form = $('#command_form_cortex');
+        }else if($('#select_programmer').val() === 'pymcuprog'){
+            command_form = $('#command_form_pymcuprog');
         }
         // validate, that all neccessary selections haven been made
         var valid = true;
@@ -131,6 +160,9 @@ $(document).ready(function(){
         }else if($('#select_programmer').val() === 'picberry'){
             command = 'picberry';
         }
+        else if($('#select_programmer').val() === 'pymcuprog'){
+            command = 'pymcuprog';
+        }
         $.ajax({
             url: 'backend/kill_command.php',
             type: 'POST',
@@ -160,12 +192,12 @@ function upload_file(){
                 myXhr.upload.addEventListener('progress', function (e) {
                     if (e.lengthComputable) {
                         // fill progressbar
-                        $('.progress-bar').attr({
+                        $('#upload_progress .progress-bar').attr({
                             style: "width: " + ((e.loaded/e.total) * 100) + "%;",
                             "aria-valuenow": e.loaded,
                             "aria-valuemax": e.total
                         });
-                        $('.progress-bar').text(e.loaded + " byte");
+                        $('#upload_progress .progress-bar').text(e.loaded + " byte");
                     }
                 }, false);
             }
@@ -209,16 +241,21 @@ function do_poll(){
             if(data.trim() !== ''){
                 empty_counter = 0;
                 // display data, if a "statusbar" is recived, animate it properly
-                if(data.includes('[ 0%]')){// "statusbar" start
-                    $('#command_output').append('<li id="command_progress">' + data + '</li>');
-                }else if(data.match(/(\[(\s|\d{1,2})\d%\])/) !== null){ // "statusbar" run
-                    $('#command_progress').text(data.match(/(\[(\s|\d{1,2})\d%\])/)[0]);
+                if(data.match(/(\[(\s|\d{1,2})\d%\])/) !== null){ // "statusbar" run
+                    var now = data.match(/((\s|\d{1,2})\d%)/)[0];
+                    $('#command_progress').text();
+                    $('#command_progress .progress-bar').attr({
+                        style: "width: " + now,
+                        "aria-valuenow": now,
+                        "aria-valuemax": "100%"
+                    });
+                    $('#command_progress .progress-bar').text(now);
                 }else{
                     $('#command_output').append('<li>' + data + '</li>');
                 }
                 updateScroll();
             }else{
-                // display a waring commmand takes to long
+                // display a warning if a commmand takes to long
                 empty_counter++;
                 if(empty_counter === 500){
                     show_info_modal('The Server seems to be stuck. You might want to abort the current command');

@@ -4,9 +4,6 @@
   "description": "socket for graph application in raspipgmlog",
   "main": "socket_server.js",
   "license": "ISC",
-  "scripts": {
-    "start": "node socket_server.js"
-  },
   "dependencies": {
     "express": "^4.17.1",
     "socket.io": "^2.3.0"

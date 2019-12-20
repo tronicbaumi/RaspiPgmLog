@@ -91,7 +91,7 @@ switch ($programmer) {
         }
 
         // assemble command
-        $command = 'sudo openocd -f "../OpenocdCustomConfigFiles/rpi2.cfg" -f "../OpenocdCustomConfigFiles/targets/' . $family . '" -f "../OpenocdCustomConfigFiles/openocd.cfg" ' . $chip_action . '-c "reset run" -c "shutdown"';
+        $command = 'sudo openocd -f "../OpenocdCustomConfigFiles/rpi.cfg" -f "../OpenocdCustomConfigFiles/targets/' . $family . '" -f "../OpenocdCustomConfigFiles/openocd.cfg" ' . $chip_action . '-c "reset run" -c "shutdown"';
         break;
         
     case "pymcuprog":

@@ -91,7 +91,7 @@ switch ($programmer) {
         }
 
         // assemble command
-        $command = 'sudo openocd -f "../OpenocdCustomConfigFiles/rpi.cfg" -f "../OpenocdCustomConfigFiles/targets/' . $family . '" -f "../OpenocdCustomConfigFiles/openocd.cfg" ' . $chip_action . '-c "reset run" -c "shutdown"';
+        $command = 'sudo openocd -f "../OpenocdCustomConfigFiles/rpi2.cfg" -f "../OpenocdCustomConfigFiles/targets/' . $family . '" -f "../OpenocdCustomConfigFiles/openocd.cfg" ' . $chip_action . '-c "reset run" -c "shutdown"';
         break;
         
     case "pymcuprog":
@@ -106,8 +106,8 @@ switch ($programmer) {
         break;
 }
 
-echo $command . ' 2>&1 ; echo Exit status : $?';
-exit;
+//echo $command . ' 2>&1 ; echo Exit status : $?';
+//exit;
 
 // open command output log for writing
 $handle = fopen('../logs/command_output.txt', 'w');

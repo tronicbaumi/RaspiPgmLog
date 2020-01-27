@@ -1,0 +1,236 @@
+{
+    "password": "pass",
+
+    "picberry_families": [
+        {
+            "value": "dspic33ep",
+            "name": "DSPIC33EP"
+        },
+        {
+            "value": "dspic33epXXXmu",
+            "name": "DSPIC33EPXXXMU"
+        },
+        {
+            "value": "dspic33f",
+            "name": "DSPIC33F"
+        },
+        {
+            "value": "dspic33ck",
+            "name": "DSPIC33CK"
+        },
+        {
+            "value": "pic10f322",
+            "name": "PIC10f322"
+        },
+        {
+            "value": "pic18fj",
+            "name": "PIC18FJ"
+        },
+        {
+            "value": "pic24fj",
+            "name": "PIC24FJ"
+        },
+        {
+            "value": "pic24fjxxxga0xx",
+            "name": "PIC24JFXXXGA0XX"
+        },
+        {
+            "value": "pic24fjxxxga3xx",
+            "name": "PIC24JFXXXGA3XX"
+        },
+        {
+            "value": "pic24fjxxga1xx",
+            "name": "PIC24JFXXGA1XX"
+        },
+        {
+            "value": "pic24fjxxgb0xx",
+            "name": "PIC24JFXXGB0XX"
+        },
+        {
+            "value": "pic24fjxxxga1xx",
+            "name": "PIC24JFXXXGA1XX"
+        },
+        {
+            "value": "pic24fjxxxgb1xx",
+            "name": "PIC24JFXXXGb1XX"
+        },
+        {
+            "value": "pic32mx1",
+            "name": "PIC32MX1"
+        },
+        {
+            "value": "pic32mx2",
+            "name": "PIC32MX2"
+        },
+        {
+            "value": "pic32mx3",
+            "name": "PIC32MX3"
+        },
+        {
+            "value": "pic32mz",
+            "name": "PIC32MZ"
+        },
+        {
+            "value": "pic32mk",
+            "name": "PIC32MK"
+        }
+    ],
+
+    "picberry_connectors": [
+        {
+            "value": "rj11",
+            "name": "RJ11"
+        },
+        {
+            "value": "row",
+            "name": "6-Pin Single Row"
+        }
+    ],
+
+    "picberry_actions": [
+        {
+            "value": "read",
+            "name": "Read"
+        },
+        {
+            "value": "write",
+            "name": "Write"
+        },
+        {
+            "value": "erase",
+            "name": "Bulk erase"
+        },
+        {
+            "value": "blankcheck",
+            "name": "Blank Check"
+        },
+        {
+            "value": "regdump",
+            "name": "Dump Registers"
+        },
+        {
+            "value": "fulldump",
+            "name": "Full Dump"
+        }
+    ],
+
+    "picberry_options": [
+        {
+            "value": "debug",
+            "name": "Debug"
+        },
+        {
+            "value": "noverify",
+            "name": "Dont Verify"
+        },
+        {
+            "value": "program-only",
+            "name": "Program Section only"
+        },
+        {
+            "value": "boot-only",
+            "name": "Boot Section only"
+        }
+    ],
+    
+    "openocd_families": [
+        {
+            "value": "atsame5x.cfg",
+            "name": "atsame5x"
+        },
+        {
+            "value": "at91samdXX.cfg",
+            "name": "atsamc21"
+        },
+        {
+            "value": "atsame70.cfg",
+            "name": "atsame70"
+        }
+    ],
+
+    "openocd_actions": [
+        {
+            "value": "write",
+            "name": "Write"
+        },
+        {
+            "value": "read",
+            "name": "Read"
+        },
+        {
+            "value": "erase",
+            "name": "Erase"
+        },
+        {
+            "value": "probe",
+            "name": "Probe Flash"
+        },
+        {
+            "value": "info",
+            "name": "Flash info"
+        },
+        {
+            "value": "list",
+            "name": "List Flash"
+        },
+        {
+            "value": "banks",
+            "name":"List Flash Banks"
+        }
+    ],
+
+    "openocd_options": [
+        {
+            "value": "d3",
+            "name": "debug"
+        }
+    ],
+
+    "pymcuprog_chips": [
+        {
+            "value": "atsamd21",
+            "name": "atsamd21"
+        }
+    ],
+
+    "pymcuprog_actions": [       
+        {
+            "value": "ping",
+            "name": "Ping"
+        },
+        {
+            "value": "erase",
+            "name": "Erase"
+        },
+        {
+            "value": "read",
+            "name": "Read"
+        },
+        {
+            "value": "write",
+            "name": "Write"
+        }
+    ],
+
+    "pymcuprog_programmers": [
+        {
+            "value": "pickit4",
+            "name": "MPLAB PicKit4"
+        },
+        {
+            "value": "snap",
+            "name": "MPLAB Snap"
+        }
+    ],
+
+    "pymcuprog_options": [
+        {
+            "value": "verbose",
+            "name": "Verbose Output"
+        },
+        {
+            "value": "verbosedebug",
+            "name": "Verbose debug Output"
+        }
+    ]
+}

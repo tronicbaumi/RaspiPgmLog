@@ -1,0 +1,22 @@
+{
+  "name": "raspipgmlog",
+  "version": "1.0.0",
+  "description": "Application for programming selected microcontrollers from a raspberrypi. It also has oszilosscope like features",
+  "main": "index.js",
+  "scripts": {
+    "start": "sudo node index.js"
+  },
+  "keywords": [
+    "RaspberryPi",
+    "Microcontrollers"
+  ],
+  "author": "Constantin Krischke",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^3.0.1",
+    "express": "^4.17.1",
+    "express-session": "^1.17.0",
+    "formidable": "^1.2.1",
+    "socket.io": "^2.3.0"
+  }
+}

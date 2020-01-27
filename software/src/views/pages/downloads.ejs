@@ -1,0 +1,38 @@
+<!-- views/pages/downloads.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%- include("../partials/head") %>
+        <link rel="stylesheet" type="text/css" href="/styles/styles.css">
+        <script src="/scripts/functions.js"></script>
+    </head>
+    <body class="container">
+        <header>
+            <%- include("../partials/header") %>
+        </header>
+        <main>
+            <h1>Files</h1>
+            <div class="row">
+                <div class="col">
+                    <h3>Command-output Logs:</h3>
+                    <% logs.forEach(function(file) { %>
+                        <div class="row"><div class="col"><a href=<%= "downloadfile?file=downloads/logs/" + file %> > <%= file %></a> </div></div>
+                    <% }); %>
+                </div>
+                <div class="col">
+                    <h3>Read Hex-Files:</h3>
+                    <% read_files.forEach(function(file) { %>
+                        <div class="row"><div class="col"><a href=<%= "downloadfile?file=downloads/read_files/" + file %> > <%= file %></a> </div></div>
+                    <% }); %>
+                </div>
+                <div class="col">
+                    <h3>Logger results:</h3>
+                    <% timeplots.forEach(function(file) { %>
+                        <div class="row"><div class="col"><a href=<%= "downloadfile?file=downloads/timeplots/" + file %> > <%= file %></a> </div></div>
+                    <% }); %>
+                </div>
+            </div>
+        </main>
+    </body>
+</html>

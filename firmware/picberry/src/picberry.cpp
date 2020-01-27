@@ -41,7 +41,8 @@
 
 #include "common.h"
 #include "devices/dspic33f.h"
-#include "devices/dspic33e.h"
+#include "devices/dspic33ep.h"
+#include "devices/dspic33epXXXmu.h"
 #include "devices/dspic33ck.h"
 #include "devices/pic10f322.h"
 #include "devices/pic18fj.h"
@@ -238,12 +239,14 @@ int main(int argc, char *argv[])
 
         if(family == 0 || strcmp(family, "dspic33f") == 0);
             //pic = new dspic33f(); default case, nothing to do
-        else if(strcmp(family,"dspic33e") == 0)
-            pic = new dspic33e(SF_DSPIC33E);
+        else if(strcmp(family,"dspic33epXXXmu") == 0)
+            pic = new dspic33epXXXmu(SF_DSPIC33E);
+        else if(strcmp(family,"dspic33ep") == 0)
+            pic = new dspic33ep();
         else if(strcmp(family,"dspic33ck") == 0)
             pic = new dspic33ck();
         else if(strcmp(family,"pic24fj") == 0)
-            pic = new dspic33e(SF_PIC24FJ);
+            pic = new dspic33epXXXmu(SF_PIC24FJ);
         else if(strcmp(family,"pic10f322") == 0)
             pic = new pic10f322();
         else if(strcmp(family,"pic18fj") == 0)
@@ -275,7 +278,9 @@ int main(int argc, char *argv[])
         else{
             cerr << "ERROR: PIC family not correctly chosen." << endl;
             cerr << "Available families:" << endl
-                 << "- dspic33e" << endl
+                 << "- dspic33f" << endl
+                 << "- dspic33ep" << endl
+                 << "- dspic33epXXXmu" << endl
                  << "- dspic33ck" << endl
                  << "- pic24fj" << endl
                  << "- pic24fjxxxga0xx" << endl
@@ -310,6 +315,7 @@ int main(int argc, char *argv[])
                     break;
                 case FXN_READ:
                     cout << "Reading chip...";
+                    cout << endl;
                     pic->read(outfile,start,count);
                     cout << "DONE! " << endl;
                     break;
@@ -473,8 +479,9 @@ void usage(void)
             "\n"
             "   Available PIC families:\n"
             "\n"
-            "       dspic33e    \n"
+            "       dspic33epXXXmu    \n"
             "       dspic33f    \n"
+            "       dspic33ep    \n"
             "       dspic33ck   \n"
             "       pic10f322   \n"
             "       pic18fj     \n"
@@ -615,7 +622,7 @@ void server_mode(int port){
                         switch(buffer[1]){
                             case SRV_FAM_DSPIC33E:
                                 cerr << "DSPIC33E" << endl;
-                                pic = new dspic33e(SF_DSPIC33E);
+                                pic = new dspic33epXXXmu(SF_DSPIC33E);
                                 break;
                             case SRV_FAM_DSPIC33F:
                                 cerr << "DSPIC33F" << endl;
@@ -627,7 +634,7 @@ void server_mode(int port){
                                 break;
                             case SRV_FAM_PIC24FJ:
                                 cerr << "PIC24FJ" << endl;
-                                pic = new dspic33e(SF_PIC24FJ);
+                                pic = new dspic33epXXXmu(SF_PIC24FJ);
                                 break;
                             case SRV_FAM_PIC32MX1:
                                 cerr << "PIC32MX1" << endl;

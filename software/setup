@@ -1,26 +1,21 @@
 #!bin/bash
 
-rm /var/www/html/index.html
-echo "cleaned target directory"
-
-cp -r src/* /var/www/html/
-mkdir /var/www/html/upload
-mkdir /var/www/html/download
-mkdir /var/www/html/logs
+mkdir /home/pi/raspipgmlog/software/src/uploads
+mkdir /home/pi/raspipgmlog/software/src/downloads
+mkdir /home/pi/raspipgmlog/software/src/downloads/logs
+mkdir /home/pi/raspipgmlog/software/src/downloads/read_files
+mkdir /home/pi/raspipgmlog/software/src/downloads/timeplots
 echo "copied source files"
 
-chown -R pi:pi /var/www/html
+chown -R pi:pi /home/pi/raspipgmlog/software/src
 echo "adjusted ownerships"
 
-chmod -R 777 /var/www/html/upload
-chmod -R 777 /var/www/html/download
-chmod -R 777 /var/www/html/logs
+chmod -R 777 /home/pi/raspipgmlog/software/src/upload
+chmod -R 777 /home/pi/raspipgmlog/software/src/downloads
+chmod -R 777 /home/pi/raspipgmlog/software/src/downloads/logs
+chmod -R 777 /home/pi/raspipgmlog/software/src/downloads/read_files
+chmod -R 777 /home/pi/raspipgmlog/software/src/downloads/timeplots
 echo "adjusted rights"
-
-cp 010_RaspiPgmLog_commands-nopasswd /etc/sudoers.d
-chown root:root /etc/sudoers.d/010_RaspiPgmLog_commands-nopasswd
-chmod 0440 /etc/sudoers.d/010_RaspiPgmLog_commands-nopasswd
-echo "setup needed commands"
 
 cp node_server.service /etc/systemd/system/
 systemctl daemon-reload

@@ -40,7 +40,6 @@ class dspic33ck : public Pic{
 
 	protected:
 		void send_cmd(uint32_t cmd);
-		inline void send_prog_nop(void);
 		uint16_t read_data(void);
         inline void exit_reset_vector(void);
         void read_four_code_words(uint16_t *data, uint32_t addr);

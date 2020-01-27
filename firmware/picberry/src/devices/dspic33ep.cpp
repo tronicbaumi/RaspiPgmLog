@@ -23,7 +23,7 @@
 #include <iostream>
 #include <unistd.h>
 
-#include "dspic33ck.h"
+#include "dspic33ep.h"
 
 /* delays (in microseconds; nanoseconds are rounded to 1us) */
 #define DELAY_P1   			1		// 200ns
@@ -40,16 +40,15 @@
 #define DELAY_P9A			10		// 10us
 #define DELAY_P9B			15		// 15us - 23us max!
 #define DELAY_P10			1		// 400ns
-#define DELAY_P11       	16000	// 16ms
-#define DELAY_P12       	4200	// 4.2ms
-#define DELAY_P13       	34	    // 34.5us MAX! -> 34us
+#define DELAY_P11       	21000	// 21ms (max)
+#define DELAY_P12       	23100	// 23.1ms (max)
+#define DELAY_P13       	54	    // 54.4us MAX! -> 54us
 #define DELAY_P14			1		// 1us MAX!
 #define DELAY_P15			1		// 10ns
 #define DELAY_P16			0		// 0s
 #define DELAY_P17   		1		// 100ns
 #define DELAY_P18			1000	// 1ms
 #define DELAY_P19			1		// 25ns
-//#define DELAY_P20			25000	// 25ms
 #define DELAY_P21			1		// 1us - 500us MAX!
 
 #define ENTER_PROGRAM_KEY	0x4D434851
@@ -63,7 +62,7 @@ static uint16_t nvmcon;
 /*
  * send a 24-bit command via the SIX instruction
  */
-void dspic33ck::send_cmd(uint32_t cmd)
+void dspic33ep::send_cmd(uint32_t cmd)
 {
 	uint8_t i;
 
@@ -72,9 +71,9 @@ void dspic33ck::send_cmd(uint32_t cmd)
 	/* send the SIX = 0x0000 instruction */
 	for (i = 0; i < 4; i++) {
 		GPIO_SET(pic_clk);
-		delay_us(DELAY_P3);
-		GPIO_CLR(pic_clk);
 		delay_us(DELAY_P2);
+		GPIO_CLR(pic_clk);
+		delay_us(DELAY_P3);
 	}
 
 	delay_us(DELAY_P4);
@@ -98,7 +97,7 @@ void dspic33ck::send_cmd(uint32_t cmd)
 /*
  * Read out the VISI register via the REGOUT instruction
  */
-uint16_t dspic33ck::read_data(void)
+uint16_t dspic33ep::read_data(void)
 {
 	uint8_t i;
 	uint16_t data = 0;
@@ -112,9 +111,9 @@ uint16_t dspic33ck::read_data(void)
 			GPIO_SET(pic_data);
 		else
 			GPIO_CLR(pic_data);
-		delay_us(DELAY_P1A);
+		delay_us(DELAY_P3);
 		GPIO_SET(pic_clk);
-		delay_us(DELAY_P1B);
+		delay_us(DELAY_P2);
 		GPIO_CLR(pic_clk);
 	}
 
@@ -143,13 +142,14 @@ uint16_t dspic33ck::read_data(void)
 
 	delay_us(DELAY_P4A);
 	GPIO_OUT(pic_data);
+
 	return data;
 }
 
 /*
  * Enter ICSP Mode
  */
-void dspic33ck::enter_program_mode(void){
+void dspic33ep::enter_program_mode(void){
     int i;
 
 	GPIO_IN(pic_mclr);
@@ -194,7 +194,7 @@ void dspic33ck::enter_program_mode(void){
 /*
  * Exit ICSP Mode
  */
-void dspic33ck::exit_program_mode(void)
+void dspic33ep::exit_program_mode(void)
 {
 	GPIO_CLR(pic_clk);
 	GPIO_CLR(pic_data);
@@ -208,7 +208,7 @@ void dspic33ck::exit_program_mode(void)
 /*
  * Send a GOTO 0x200 command, before and after programming operations
  */
-inline void dspic33ck::exit_reset_vector(void)
+inline void dspic33ep::exit_reset_vector(void)
 {
 	send_nop();
 	send_nop();
@@ -222,7 +222,7 @@ inline void dspic33ck::exit_reset_vector(void)
 /*
  * read four 24-bit words (8-bit + 16-bit) from code memory and store them in the data array
  */
-void dspic33ck::read_four_code_words(uint16_t *data, uint32_t addr)
+void dspic33ep::read_four_code_words(uint16_t *data, uint32_t addr)
 {
 	uint16_t raw_data[6];
 
@@ -288,7 +288,7 @@ void dspic33ck::read_four_code_words(uint16_t *data, uint32_t addr)
 
 	/* read six data words (16 bits each) */
 	for(unsigned short i=0; i<6; i++){
-		send_cmd(0x887E60 + i);
+		send_cmd(0x887C40 + i);
 		send_nop();
 		raw_data[i] = read_data();
 		send_nop();
@@ -320,11 +320,11 @@ void dspic33ck::read_four_code_words(uint16_t *data, uint32_t addr)
 }
 
 /*
- * Read a 24-bit configuration word and reaturn it
+ * Read a configuration byte and return it
  */
-uint32_t dspic33ck::read_config_word(uint32_t addr)
+uint8_t dspic33ep::read_config_byte(uint32_t addr)
 {
-	uint16_t data_head, data_body;
+	uint16_t config_byte;
 
 	/*  Exit the Reset vector */
 	exit_reset_vector();
@@ -336,35 +336,61 @@ uint32_t dspic33ck::read_config_word(uint32_t addr)
 	send_cmd(0x200006 | ((addr & 0x0000FFFF) << 4));
 	
 	/* Store the Configuration register and send the contents of the VISI register. */
-	send_nop();
-	send_cmd(0xBA8B96);
-	send_nop();
-	send_nop();
-	send_nop();
+	send_cmd(0xEB0380);
+    send_nop();
+	send_cmd(0xBA5B96);
 	send_nop();
 	send_nop();
-	data_head = read_data(); // read upper byte
+	send_nop();
+	send_nop();
+	send_nop();
 
-	send_cmd(0xBA0B96);
+	send_cmd(0x887C40);
 	send_nop();
-	send_nop();
-	send_nop();
-	send_nop();
-	send_nop();
-	data_body = read_data(); // read lower word
+	config_byte = read_data(); // read config byte 
 
-	return ((data_head << 16) | data_body);
+    exit_reset_vector();
+
+	return (0xFF & config_byte);
+}
+
+uint16_t dspic33ep::read_userID_word(uint32_t addr){
+
+	uint16_t uid_word = 0;
+
+	exit_reset_vector();
+
+    send_cmd(0x200000 | ((addr & 0x00FF0000) >> 12));
+	send_cmd(0x8802A0);
+	send_cmd(0x200006 | ((addr & 0x0000FFFF) << 4));
+
+	send_cmd(0xEB0380);
+	send_nop();
+	send_cmd(0xBA1BB6);
+	send_nop();
+	send_nop();
+	send_nop();
+	send_nop();
+	send_nop();
+
+	send_cmd(0x887C40);
+	send_nop();
+	uid_word = read_data();
+
+	exit_reset_vector();
+
+	return uid_word;
 }
 
 /*
  * Read the device ID and Revision and setup the application internal memory for the individual device 
  */
-bool dspic33ck::read_device_id(void)
+bool dspic33ep::read_device_id(void)
 {
 	bool found = 0;
 
-	device_id = read_config_word(0xFF0000);
-	device_rev = read_config_word(0xFF0002);
+	device_id = read_userID_word(0xFF0000);
+	device_rev = read_userID_word(0xFF0002);
 
 	for (unsigned short i=0;i < sizeof(piclist)/sizeof(piclist[0]);i++){
 
@@ -372,7 +398,7 @@ bool dspic33ck::read_device_id(void)
 
 			strcpy(name, piclist[i].name);
 			mem.code_memory_size = piclist[i].code_memory_size;
-			mem.program_memory_size = 0x00801800;
+			mem.program_memory_size = mem.code_memory_size + 0x15;
 			mem.location = (uint16_t*) calloc(mem.program_memory_size,sizeof(uint16_t));
 			mem.filled = (bool*) calloc(mem.program_memory_size,sizeof(bool));
 			found = 1;
@@ -386,23 +412,23 @@ bool dspic33ck::read_device_id(void)
 /*
  * Erase all user code memory and reset configuration registers
  */
-void dspic33ck::bulk_erase(void)
+void dspic33ep::bulk_erase(void)
 {
 	/* Exit the Reset vector */
 	exit_reset_vector();
 
 	/* Set the NVMCON register to erase all user program memory. */
-	send_cmd(0x2400EA);
-	send_cmd(0x88468A);
+	send_cmd(0x2400DA);
+	send_cmd(0x88394A);
 	send_nop();
 	send_nop();
 
 	/* Initiate the erase cycle */
-	send_cmd(0x20055A);
-	send_cmd(0x8846BA);
-	send_cmd(0x200AAA);
-	send_cmd(0x8846BA);
-	send_cmd(0xA8E8D1);
+	send_cmd(0x200551);
+	send_cmd(0x883971);
+	send_cmd(0x200AA1);
+	send_cmd(0x883971);
+	send_cmd(0xA8E729);
 	send_nop();
 	send_nop();
 	send_nop();
@@ -412,9 +438,8 @@ void dspic33ck::bulk_erase(void)
 	/* Generate clock pulses for the code memory Bulk Erase operation to complete until the WR bit is clear */
 	do{
 		send_nop();
-		send_cmd(0x804680);
-		send_nop();		
-		send_cmd(0x887E60);
+		send_cmd(0x803940);	
+		send_cmd(0x887C40);
 		send_nop();
 		nvmcon = read_data();
 		exit_reset_vector();
@@ -427,31 +452,27 @@ void dspic33ck::bulk_erase(void)
  * Read all configuration registers and output them to the console.
  * The output will not be saved anywhere
  */
-void dspic33ck::dump_configuration_registers(void)
+void dspic33ep::dump_configuration_registers(void)
 {
-	/* The configuration registers are always stored in the last 0xFE */
-	uint32_t addr = mem.code_memory_size - 0xFE;
-	uint32_t data = 0;
+	/* The configuration registers are always stored after the user code memory */
+	uint32_t addr = mem.code_memory_size - 0xEA;
+	uint8_t data = 0;
 
 	cerr << endl << "Configuration registers:" << endl << endl;
-	for(unsigned short i=0; i<17; i++){
+	for(unsigned short i=0; i<10; i++){
 
-		data = read_config_word(addr | regaddr[i]);
-		fprintf(stderr," - %s: 0x%06x\n", regname[i], data);
-
-		if(i == 15){
-			addr = 0x801800;
-		}
+		data = read_config_byte(addr | regaddr[i]);
+		fprintf(stderr," - %s: 0x%02x\n", regname[i], data);
 	}
 
 	cerr << endl;
 }
 
 /* Read PIC memory and write the contents to a .hex file */
-void dspic33ck::read(char *outfile, uint32_t start, uint32_t count)
+void dspic33ep::read(char *outfile, uint32_t start, uint32_t count)
 {
 	uint32_t addr, startaddr, stopaddr;
-	uint32_t config_word;
+	uint8_t config_byte;
 	uint16_t data[8];
 	int i=0;
 
@@ -500,23 +521,14 @@ void dspic33ck::read(char *outfile, uint32_t start, uint32_t count)
 	}
 
 	/*read configuration registers*/
-	addr = mem.code_memory_size - 0xFE;
-	for(i=0; i<17; i++){
+	addr = mem.code_memory_size - 0xEA;
+	for(i=0; i<10; i++){
 		
-		config_word = read_config_word(addr | regaddr[i]);
+		config_byte = read_config_byte(addr | regaddr[i]);
 
-		if ((config_word & 0x0000FFFF) != 0x0000FFFF) {
-			mem.location[addr] = (config_word & 0x0000FFFF);
+		if ((config_byte & 0x000000FFF) != 0x000000FF) {
+			mem.location[addr] = (config_byte & 0x000000FF);
 			mem.filled[addr] = 1;
-		}
-
-		if ((config_word & 0x00FF0000) != 0x00FF0000) {
-			mem.location[addr+1] = ((config_word & 0x00FF0000) >> 16);
-			mem.filled[addr+1] = 1;
-		}
-
-		if(i == 15){
-			addr = 0x801800;
 		}
 	}
 
@@ -525,12 +537,11 @@ void dspic33ck::read(char *outfile, uint32_t start, uint32_t count)
 	write_inhx(&mem, outfile);
 }
 
-void dspic33ck::write(char *infile)
+void dspic33ep::write(char *infile)
 {
 	uint16_t i,j;
 	uint16_t data[8];
 	uint32_t addr = 0;
-	uint32_t temp_addr = 0;
 
 	unsigned int filled_locations=1;
 
@@ -585,31 +596,33 @@ void dspic33ck::write(char *infile)
 		send_cmd(0xBBEBB6);
 		send_nop();
 		send_nop();
-		send_cmd(0xBB0B96);
+		send_cmd(0xBB1BB6);
 		send_nop();
 		send_nop();
 
 		/*Set the NVMADRU/NVMADR register pair to point to the correct address*/
 		send_cmd(0x200003 | ((addr & 0x0000FFFF) << 4));
 		send_cmd(0x200004 | ((addr & 0x00FF0000) >> 12));
-		send_cmd(0x884693);
-		send_cmd(0x8846A4);
+		send_cmd(0x883953);
+		send_cmd(0x883964);
 
 		/*Set the NVMCON register to program two instruction words*/
 		send_cmd(0x24001A);
 		send_nop();
-		send_cmd(0x88468A);
+		send_cmd(0x88394A);
 		send_nop();
 		send_nop();
 
 		/*Initiate the write cycle*/
-		send_cmd(0x20055A);
-		send_cmd(0x8846BA);
-		send_cmd(0x200AAA);
-		send_cmd(0x8846BA);
-		send_cmd(0xA8E8D1);
+		send_cmd(0x200551);
+		send_cmd(0x883971);
+		send_cmd(0x200AA1);
+		send_cmd(0x883971);
+		send_cmd(0xA8E729);
 		send_nop();
 		send_nop();
+		send_nop();
+        send_nop();
 		send_nop();
 
 		delay_us(DELAY_P13);
@@ -617,18 +630,11 @@ void dspic33ck::write(char *infile)
 		/*Generate clock pulses for the program operation to complete until the WR bit is clear.*/
 		do{
 			send_nop();
-			send_cmd(0x804680);
-			send_nop();
-			send_cmd(0x887E60);
+			send_cmd(0x803940);
+			send_cmd(0x887C40);
 			send_nop();
 			nvmcon = read_data();
-			send_nop();
-			send_nop();
-			send_nop();
-			reset_pc();
-			send_nop();
-			send_nop();
-			send_nop();
+			exit_reset_vector();
 		} while((nvmcon & 0x8000) == 0x8000);
 
 		if(counter != addr*100/filled_locations){
@@ -659,56 +665,48 @@ void dspic33ck::write(char *infile)
 	send_cmd(0x200FAC);
 	send_cmd(0x8802AC);
 
-	addr = mem.code_memory_size - 0xFE;
+	addr = mem.code_memory_size - 0xEA;
 
-	for(i=0; i<16; i += 2){
+	for(i=0; i<10; i += 2){
 
 		/* Load W0:W1 with the next two Configuration Words to program */
 		/*get first word*/
-		send_cmd(0x200000 | ((mem.location[addr | regaddr[i]] & 0x0000FFFF) << 4));
-		send_cmd(0x200001 | ((mem.location[addr | regaddr[i]] & 0xFFFF0000) >> 12));
-
-		/*get second word*/
-		send_cmd(0x200002 | ((mem.location[addr | regaddr[i+1]] & 0x0000FFFF) << 4));
-		send_cmd(0x200003 | ((mem.location[addr | regaddr[i+1]] & 0xFFFF0000) >> 12));
+		send_cmd(0x2FF000 | ((mem.location[addr | regaddr[i]] & 0x000000FF) << 4));
+		send_cmd(0x2FF001 | ((mem.location[addr | regaddr[i + 1]] & 0x000000FF) << 4));
 
 		/*Set the Write Pointer (W3) and load the write latches */
-		send_cmd(0xEB0300);
+		send_cmd(0xEB0180);
 		send_nop();
-		send_cmd(0xBB0B00);
-		send_nop();
-		send_nop();
-		send_cmd(0xBB9B01);
+		send_cmd(0xBB1980);
 		send_nop();
 		send_nop();
-		send_cmd(0xBB0B02);
-		send_nop();
-		send_nop();
-		send_cmd(0xBB9B03);
+		send_cmd(0xBB0981);
 		send_nop();
 		send_nop();
 
 		/* Set the NVMADRU/NVMADR register pair to point to the correct Configuration Word address*/
 		send_cmd(0x200004 | (((addr | regaddr[i]) & 0x0000FFFF) << 4));
 		send_cmd(0x200005 | (((addr | regaddr[i]) & 0xFFFF0000) >> 12));
-		send_cmd(0x884694);
-		send_cmd(0x8846A5);
+		send_cmd(0x883954);
+		send_cmd(0x883965);
 
 		/*Set the NVMCON register to program two instruction words*/
 		send_cmd(0x24001A);
 		send_nop();
-		send_cmd(0x88468A);
+		send_cmd(0x88394A);
 		send_nop();
 		send_nop();
 
 		/* Initiate the write cycle */
-		send_cmd(0x20055A);
-		send_cmd(0x8846BA);
-		send_cmd(0x200AAA);
-		send_cmd(0x8846BA);
-		send_cmd(0xA8E8D1);
+		send_cmd(0x200551);
+		send_cmd(0x883971);
+		send_cmd(0x200AA1);
+		send_cmd(0x883971);
+		send_cmd(0xA8E729);
 		send_nop();
 		send_nop();
+		send_nop();
+        send_nop();
 		send_nop();
 
 		delay_us(DELAY_P13);
@@ -716,18 +714,12 @@ void dspic33ck::write(char *infile)
 		/*Generate clock pulses for the program operation to complete until the WR bit is clear*/
 		do{
 			send_nop();
-			send_cmd(0x804680);
+			send_cmd(0x803940);
 			send_nop();
-			send_cmd(0x887E60);
+			send_cmd(0x887C40);
 			send_nop();
 			nvmcon = read_data();
-			send_nop();
-			send_nop();
-			send_nop();
-			reset_pc();
-			send_nop();
-			send_nop();
-			send_nop();
+			exit_reset_vector();
 		} while((nvmcon & 0x8000) == 0x8000);
 
 		if(flags.debug)
@@ -748,7 +740,7 @@ void dspic33ck::write(char *infile)
 		counter = 0;
 
 		addr=0;
-		for(addr=0; addr < mem.code_memory_size; addr=addr+8) {
+		for(addr=0; addr < mem.code_memory_size + 0x15; addr=addr+8) {
 
 			read_four_code_words(data, addr);
 			
@@ -782,7 +774,7 @@ void dspic33ck::write(char *infile)
 	}
 }
 
-uint8_t dspic33ck::blank_check(void)
+uint8_t dspic33ep::blank_check(void)
 {
 	uint32_t addr;
 	unsigned short i;
@@ -793,11 +785,7 @@ uint8_t dspic33ck::blank_check(void)
 
 	counter=0;
 
-	/* exit reset vector */
-	exit_reset_vector();
-
-	/* Output data to W0:W5; repeat until all desired code memory is read. */
-	for(addr=0; addr < (mem.code_memory_size - 0xFE); addr=addr+8) {
+	for(addr=0; addr < (mem.code_memory_size); addr=addr+8) {
 
 		read_four_code_words(data, addr);
 
@@ -825,8 +813,6 @@ uint8_t dspic33ck::blank_check(void)
 		if(!flags.debug) cerr << "\b\b\b\b\b";
 		ret = 0;
 	};
-
-	exit_reset_vector();
 
 	return ret;
 }

@@ -1,0 +1,19 @@
+<!-- views/pages/login.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%- include("../partials/head") %>
+    </head>
+    <body class="container">
+
+        <main>
+            <form action="auth" method="post">
+                <h1>Login</h1>
+                <label>Password</label>
+                <input type="password" name="password"/>
+                <button type="submit" class="btn btn-primary">Login</button>
+            </form>
+        </main>
+
+    </body>
+</html>

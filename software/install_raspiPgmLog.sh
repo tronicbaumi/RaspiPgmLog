@@ -102,7 +102,7 @@ make install
 
 cd /home/pi/
 
-git clone https://github.com/tronicbaumi/RaspiPgmLog.git raspipgmlog
+# git clone https://github.com/tronicbaumi/RaspiPgmLog.git raspipgmlog
 
 cd raspipgmlog/firmware/picberry/
 if [ "$device" = "rpizero" ] ; then

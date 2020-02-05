@@ -10,16 +10,16 @@ PICBERRY, openOCD and pymcuprog are used.
 
 # Contents
 
-* [Setup RaspiPgmLog](#setup_log)
-    * [Initial setup](#initial_setup)
-    * [Setup via the setupscript](#script_setup)
-    * [Setup by hand](#hand_setup)
-    * [Final Configuration](#final_config)
-* [Setup InkyPHAT display](#setup_display)
+* [Setup RaspiPgmLog](#setup-log)
+    * [Initial setup](#initial-setup)
+    * [Setup via the setupscript](#script-setup)
+    * [Setup by hand](#hand-setup)
+    * [Final Configuration](#final-config)
+* [Setup InkyPHAT display](#setup-display)
 
-# Setup RaspiPgmLog {#setup_log}
+# Setup RaspiPgmLog (#setup-log)
 
-## Initial setup {#initial_setup}
+## Initial setup (#initial-setup)
 
 Download Raspbian from the official website (https://www.raspberrypi.org/downloads/raspbian/) and flash it onto an SD card. I used the “Lite” version. 
 Log in on your raspi, the standard user is ‘pi’ and the standard password is ‘raspberry’.
@@ -37,9 +37,9 @@ A Gui will appear, where you can change some option:
 * Under `Network Options` you can connect you pi to Wi-Fi (this is necessary if you have no ethernet connection. You need to be connected to the internet!!!)
 * Finally, you need to enable `Serial` in `Interfacing Options`. When enabling it, you will also be asked if you want to enable command line access via serial, make sure to read carefully and select `No` for that option, to increase security
 
-If you want to install everything by hand, skip to [setup by hand](#hand_setup). Else read on, how to install all via the install script:
+If you want to install everything by hand, skip to [setup by hand](#hand-setup). Else read on, how to install all via the install script:
 
-## Setup via setup-script {#script_setup}
+## Setup via setup-script (#script-setup)
 
 Type in your command line:
 
@@ -52,9 +52,9 @@ sudo sh install_raspiPgmLog.sh –device [device] [–no-display]
 
 For `[device]` insert the device you are using. The available options are: `rpi2` for Raspberry Pi 2 and greater and `rpizero` for Raspberry Pi Zero and Raspberry Pi 1. The `—no-diplay` option is optional and is only required, if you are not using the inkyPHAT display.
 
-To read about the final configuration options, skip to [final configuration](#final_config).
+To read about the final configuration options, skip to [final configuration](#final-config).
 
-## Setup by hand {#hand_setup}
+## Setup by hand (#hand-setup)
 
 You have chosen to install the whole project by hand.
 Start by typing in the command line:
@@ -172,7 +172,7 @@ Else, if you are on Raspberry Pi 2 or greater, type:
 sudo mv rpi2.cfg rpi.cfg
 ```
 
-## Final configuration {#final_config}
+## Final configuration (#final-config)
 
 Now you can open a Browser on a computer on the same Network as the raspi and type [http://[your raspis ip address]:3000](). You can find out what it is, by typing:
 
@@ -231,7 +231,7 @@ If you followed this documentation closely, everything should work now.
 
 __Hooray, you successfully made a programming device out of your raspi.__ 
  
-# Setup InkyPHAT Display {#setup_display}
+# Setup InkyPHAT Display (#setup-display)
 
 If you have an InkyPHAT display to mount on your raspi, this documentation will tell you how to set it up to display the hostname and the ip address of the raspi.
 First, we need to do some more configuring on the raspi. Type in command line:

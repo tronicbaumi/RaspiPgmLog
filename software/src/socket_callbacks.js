@@ -8,6 +8,7 @@ function SocketCallbacks(io, spawn, path, performance, fs){
   this.target_dir = self.path.join(__dirname, "/uploads/");
   this.send_data = false;
   this.uart = null;
+  this.programmer = null;
     
   this.ask = function(question){
     switch(question.id){
@@ -22,7 +23,11 @@ function SocketCallbacks(io, spawn, path, performance, fs){
   };
 
   this.command = function(params){
-    var command = {};
+    var command = {
+      cmd: '',
+      args: [],
+      options: {} 
+    };
     var date = new Date();
     var read_file = self.path.join(__dirname, "downloads", "read_files", date.toISOString());
 
@@ -134,7 +139,7 @@ function SocketCallbacks(io, spawn, path, performance, fs){
         }
         
         command.cmd = "pymcuprog";
-        command.args = [action, '-d ' + params.family, '-t ' + params.connector, '--' + params.option];
+        command.args = [action, '-d ', params.family, '-t ', params.connector, '--' + params.option];
 
         break;
     }
@@ -142,9 +147,9 @@ function SocketCallbacks(io, spawn, path, performance, fs){
     console.log(command);
 
     //spawn command
-    var programmer = self.spawn(command.cmd, command.args, command.options);
-    programmer.stdout.setEncoding('utf-8');
-    programmer.stderr.setEncoding('utf-8');
+    self.programmer = self.spawn(command.cmd, command.args, command.options);
+    self.programmer.stdout.setEncoding('utf-8');
+    self.programmer.stderr.setEncoding('utf-8');
 
     // write log and emmit output
     var logger = self.fs.createWriteStream(self.path.join(__dirname, "downloads", "logs", 'log' + date.toISOString() + '.txt'), {
@@ -159,12 +164,15 @@ function SocketCallbacks(io, spawn, path, performance, fs){
       });
     };
 
-    programmer.stdout.on("data", output_command_data);
-    programmer.stderr.on("data", output_command_data);
+    self.programmer.stdout.on("data", output_command_data);
+    self.programmer.stderr.on("data", output_command_data);
+    self.programmer.on("error", output_command_data);
   };
 
   this.kill_command = function(){
-
+    if(self.programmer !== null){
+      self.programmer.kill('SIGKILL');
+    }
   };
 
   // on start event spawn uart.py and add event handlers 
@@ -203,9 +211,11 @@ function SocketCallbacks(io, spawn, path, performance, fs){
   
   // tell uart script to stop logging
   this.stop = function(){
-    console.log('stopping uart');
-    self.uart.stdin.write("stop", "utf-8");
-    self.uart.stdin.end();
+    if(self.uart !== null){
+      console.log('stopping uart');
+      self.uart.stdin.write("stop", "utf-8");
+      self.uart.stdin.end();
+    }
   };
 
   // toggle pushing data to browser

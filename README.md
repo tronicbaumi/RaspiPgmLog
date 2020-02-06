@@ -16,6 +16,7 @@ PICBERRY, openOCD and pymcuprog are used.
     * [Setup by hand](#setup-by-hand)
     * [Final Configuration](#final-configuration)
     * [Wiring it up](#wiring-it-up)
+    * [Adding the logger device](#adding-the-logger-device)
 * [Setup InkyPHAT display](#setup-inkyphat-display)
 
 # Setup RaspiPgmLog

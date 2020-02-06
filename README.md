@@ -76,7 +76,7 @@ pip3 install pyserial
 ```
 
 We also need nodejs. This is a little more complicated to install:
-Firs we need to determine which chip our raspi is using. Type:
+First we need to determine which chip our raspi is using. Type:
 
 ```bash
 uname -m
@@ -229,6 +229,23 @@ The last thing to now is, to do the physical wiring, if you didn’t do it alrea
 | 6	| none |none |
 
 You can see the pinout for the Raspberry Pi here: https://pinout.xyz/ or you can look at the picture below:
+
+![raspi pinout](https://www.elektronik-kompendium.de/sites/raspberry-pi/fotos/raspberry-pi-15b.jpg)
+
+## Adding the logger device
+
+The logger firmware was written for Arduino, so you need an Arduino microcontroller board.
+
+If you did not already, download the Arduino Ide from here: https://www.arduino.cc/en/main/software, load the sketch from the `uart_logger` folder in the `firmware` folder and programm your Arduino board with it. A turtorial how to programm an Arduino Board can be found here: https://www.arduino.cc/en/Guide/Environment#toc9
+
+Now you need to connect the Arduino board to the Raspberry Pi over their serial ports:
+
+|   | Arduino Uno | Raspberry Pi |
+|---|:-----------:|:------------:|
+| Name | TXD <br> RXD | RXD <br> TXD |
+| Pin | D1 <br> D0 | GPIO15 (10) <br> GPIO14 (8) |
+
+Currently, the logger device will just send dummy data. The full functionality will be added in a later patch. 
 
 If you followed this documentation closely, everything should work now.
 

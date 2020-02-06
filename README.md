@@ -83,7 +83,7 @@ First we need to determine which chip our raspi is using. Type:
 uname -m
 ```
 
-It will return something like this: `armv6l`, `armv7l`, `armv8l` (Output might differ, important is the version number.  
+It will return something like this: `armv6l` or `armv7l` or `armv8l` (Output might differ, important is the version number.  
 If it says `v6`, follow the steps below:
 
 ```bash
@@ -186,7 +186,7 @@ in your raspis command line, or by following the documentation for [setting up t
 Now you should see a login form. The standard password is `pass`, you can change it by going to your raspis command line and typing:
 
 ```bash
-sudo nano /home/pi/raspipgmlog/software/src /datastorage.php
+sudo nano /home/pi/raspipgmlog/software/src/datastorage.php
 ```
 
 Change the `password` variable to the password you like and save the file.

@@ -49,10 +49,16 @@ Type in your command line:
 sudo apt-get install git
 git clone https://github.com/tronicbaumi/RaspiPgmLog.git raspipgmlog
 cd raspipgmlog/software/
-sudo sh install_raspiPgmLog.sh –device [device] [–no-display]
+sudo sh install_raspiPgmLog.sh --device [device] [--no-display]
 ```
 
-For `[device]` insert the device you are using. The available options are: `rpi2` for Raspberry Pi 2 and greater and `rpizero` for Raspberry Pi Zero and Raspberry Pi 1. The `—no-diplay` option is optional and is only required, if you are not using the inkyPHAT display.
+For `[device]` insert the device you are using. The available options are: `rpi2` for Raspberry Pi 2 and greater and `rpizero` for Raspberry Pi Zero and Raspberry Pi 1. The `--no-diplay` option is optional and is only required, if you are not using the inkyPHAT display.
+
+The command for the recommended hardware, the Raspberry Pi Zero with an inkyPHAT display attached, would then look like this: 
+
+```bash
+sudo sh install_raspiPgmLog.sh --device rpizero
+```
 
 To read about the final configuration options, skip to [final configuration](#final-configuration).
 

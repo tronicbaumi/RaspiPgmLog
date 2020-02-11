@@ -47,10 +47,13 @@ if serialPort0.isOpen:
     log_file_name = "./downloads/timeplots/" + log_file_name + '.csv'
     # open log file for writing 
     f = open(log_file_name, "w")
+    f.write("time(ms),A0,A1,A2,A3,A4,A5,A6,D5,D6,D9,D10,D11\n")
     # set run dependency for the recive loop
     read_uart = True
     # tell the logger to start logging
     serialPort0.write("start\n".encode('utf-8'))
+    # initialise a buffer for stdin input
+    buff = ''
     # start uart read loop
     while read_uart:
         # check if somthing has been sent to standard in
@@ -58,11 +61,16 @@ if serialPort0.isOpen:
         if rfds:
             # 'stop' has been read, tell the logger to stop logging, set the stop dependency for the read loop 
             # and report to the caller
-            if ("stop" in sys.stdin.readlines()):
+            while not buff.endswith('\n'):
+                buff += sys.stdin.read(1)
+            if ("stop" in buff):
                 sys.stdout.write("Uart: stopping\n")
-                sys.stdout.write(log_file_name + '\n')
                 serialPort0.write("stop\n".encode('utf-8'))
                 read_uart = False
+            if("g" in buff):
+                sys.stdout.write(buff)
+                serialPort0.write(buff.encode('utf-8'))
+            buff = ''
         # do some errorhandling
         if not serialPort0.isOpen:
             raise Exception("Serial port closed unexpected")

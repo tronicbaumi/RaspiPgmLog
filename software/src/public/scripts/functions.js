@@ -4,6 +4,7 @@
 $(document).ready(function(){
     var socket = io();
 
+    // receive a answer from the server 
     socket.on("answer", function(answer){
         switch(answer.id){
             case "file_exist":
@@ -17,6 +18,7 @@ $(document).ready(function(){
         }
     });
 
+    // display output of the command
     socket.on("command_output", function(data){
         console.log(data);
         // display data, if a "statusbar" is recived, animate it properly
@@ -116,7 +118,7 @@ $(document).ready(function(){
                     cortex_container.addClass('d-block');
                 }
                 break;
-            case 'pymcuprog':
+            case 'pymcuprog': // show pymcuprog container
                 if(pic_container.hasClass('d-block')){
                     pic_container.removeClass('d-block');
                     pic_container.addClass('d-none');

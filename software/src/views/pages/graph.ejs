@@ -19,31 +19,137 @@
             </div> 
             <div class="row">
                 <div class="col">
-                    <div class="input-group mb-3">
-                        <select class="custom-select" id="sampletime_select">
-                            <option value="10">10 ms</option>
-                            <option value="20">20 ms</option>
-                            <option value="50">50 ms</option>
-                            <option value="100" selected>100 ms</option>
-                            <option value="200">200 ms</option>
-                            <option value="500">500 ms</option>
-                            <option value="1000">1 s</option>
-                            <option value="20000">20 s</option>
-                            <option value="60000">1 min</option>
-                        </select>
-                        <div class="input-group-append">
-                            <label class="input-group-text" for="sampletime_select">
-                                Selection takes effect, when starting the logging
-                            </label>
+                    <div class="row">
+                        <div class="col">
+                            <div class="input-group mb-3">
+                                <select class="custom-select" id="sampletime_select">
+                                    <option value="10">10 ms</option>
+                                    <option value="20">20 ms</option>
+                                    <option value="50">50 ms</option>
+                                    <option value="100" selected>100 ms</option>
+                                    <option value="200">200 ms</option>
+                                    <option value="500">500 ms</option>
+                                    <option value="1000">1 s</option>
+                                    <option value="20000">20 s</option>
+                                    <option value="60000">1 min</option>
+                                </select>
+                                <div class="input-group-append">
+                                    <label class="input-group-text" for="sampletime_select">
+                                        Selection takes effect, when starting the logging
+                                    </label>
+                                </div>
+                            </div>        
                         </div>
-                    </div>        
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <button class="btn btn-primary" id="start">Start</button>
+                            <button class="btn btn-danger" id="stop">Stop</button>
+                            <button class="btn btn-warning" id="pause">Pause</button>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="row">
                 <div class="col">
-                    <button class="btn btn-primary" id="start">Start</button>
-                    <button class="btn btn-danger" id="stop">Stop</button>
-                    <button class="btn btn-warning" id="pause">Pause</button>
+                    <div class="row">
+                        <div class="col-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="5" id="D5" aria-owns="d5_range">
+                                <label class="form-check-label" for="D5">
+                                    Pin 5
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-9">
+                            <div class="row">
+                                <div class="col-10">
+                                    <input type="range" min="0" max="1023" value="1023" class="form-control-range" id="d5_range">
+                                </div>
+                                <div class="col-2">
+                                    <label for="d5_range" >5</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="6" id="D6" aria-owns="d6_range">
+                                <label class="form-check-label" for="D6">
+                                    Pin 6
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-9">
+                            <div class="row">
+                                <div class="col-10">
+                                    <input type="range" min="0" max="1023" value="1023" class="form-control-range" id="d6_range">
+                                </div>
+                                <div class="col-2">
+                                    <label for="d6_range" >5</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="9" id="D9" aria-owns="d9_range">
+                                <label class="form-check-label" for="D9">
+                                    Pin 9
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-9">
+                            <div class="row">
+                                <div class="col-10">
+                                    <input type="range" min="0" max="1023" value="1023" class="form-control-range" id="d9_range">
+                                </div>
+                                <div class="col-2">
+                                    <label for="d9_range" >5</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="10" id="D10" aria-owns="d10_range">
+                                <label class="form-check-label" for="D10">
+                                    Pin 10
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-9">
+                            <div class="row">
+                                <div class="col-10">
+                                    <input type="range" min="0" max="1023" value="1023" class="form-control-range" id="d10_range">
+                                </div>
+                                <div class="col-2">
+                                    <label for="d10_range" >5</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="11" id="D11" aria-owns="d11_range">
+                                <label class="form-check-label" for="D11">
+                                    Pin 11
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-9">
+                            <div class="row">
+                                <div class="col-10">
+                                    <input type="range" min="0" max="1023" value="1023" class="form-control-range" id="d11_range">
+                                </div>
+                                <div class="col-2">
+                                    <label for="d11_range" >5</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>

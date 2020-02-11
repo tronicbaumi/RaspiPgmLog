@@ -1,0 +1,7 @@
+Open On-Chip Debugger 0.10.0+dev-00954-gded67990 (2019-10-23-14:27)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+
+Unexpected command line argument: /home/pi/RaspiPgmLog_Server/OpenocdCustomConfigFiles/rpi.cfg
+

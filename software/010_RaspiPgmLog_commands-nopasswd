@@ -1,4 +1,0 @@
-www-data ALL=NOPASSWD: /bin/cp
-www-data ALL=NOPASSWD: /usr/bin/killall
-www-data ALL=NOPASSWD: /usr/bin/picberry
-www-data ALL=NOPASSWD: /usr/local/bin/openocd

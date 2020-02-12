@@ -1,6 +1,6 @@
-# RaspiPgmLog
+# RaspiPgmLog <!-- omit in toc -->
 
-## a Raspberrypi to in circuit serial program (ICSP) Microchip microcontrollers through the ICSP and JTAG Interface. (SNAP may be supported in the future)
+## a Raspberrypi to in circuit serial program (ICSP) Microchip microcontrollers through the ICSP and JTAG Interface. (SNAP may be supported in the future) <!-- omit in toc -->
 
 Additionally an Arduino can be connected to the Raspberrypi for datalogging.
 RaspiPgmLog uses a web based userinterface which allows to use any kind of browser to upload a HEX file to program the device and to visualize the logged data.	
@@ -8,11 +8,8 @@ RaspiPgmLog uses a web based userinterface which allows to use any kind of brows
 Due to the Raspberry's WIFI interface this solution allows a simple way of isolation between the PC and the target application.
 PICBERRY, openOCD and pymcuprog are used.
 
-# Contents
+# Content <!-- omit in toc -->
 
-- [RaspiPgmLog](#raspipgmlog)
-  - [a Raspberrypi to in circuit serial program (ICSP) Microchip microcontrollers through the ICSP and JTAG Interface. (SNAP may be supported in the future)](#a-raspberrypi-to-in-circuit-serial-program-icsp-microchip-microcontrollers-through-the-icsp-and-jtag-interface-snap-may-be-supported-in-the-future)
-- [Contents](#contents)
 - [Setup RaspiPgmLog](#setup-raspipgmlog)
   - [Initial setup](#initial-setup)
   - [Setup via setup-script](#setup-via-setup-script)

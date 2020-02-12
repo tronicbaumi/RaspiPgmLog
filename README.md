@@ -16,9 +16,9 @@ PICBERRY, openOCD and pymcuprog are used.
   - [Setup by hand](#setup-by-hand)
   - [Final configuration](#final-configuration)
   - [Wiring it up](#wiring-it-up)
-      - [Jtag / SWD (for OpenOCD):](#jtag--swd-for-openocd)
-      - [ICSP 6-Pin Row (for Picberry):](#icsp-6-pin-row-for-picberry)
-      - [ICSP RJ11 (for Picberry):](#icsp-rj11-for-picberry)
+      - [Jtag / SWD (for OpenOCD)](#jtag--swd-for-openocd)
+      - [ICSP 6-Pin Row (for Picberry)](#icsp-6-pin-row-for-picberry)
+      - [ICSP RJ11 (for Picberry)](#icsp-rj11-for-picberry)
   - [Adding the logger device](#adding-the-logger-device)
 - [Setup InkyPHAT Display](#setup-inkyphat-display)
 
@@ -203,7 +203,7 @@ The last thing to now is, to do the physical wiring, if you didn’t do it alrea
 
 ## Wiring it up
 
-#### Jtag / SWD (for OpenOCD):
+#### Jtag / SWD (for OpenOCD)
 
 | Connector pin | Connection name | Raspberry Pi GPIO / pin |
 | :-----------: | :-------------: | :---------------------: |
@@ -216,7 +216,7 @@ The last thing to now is, to do the physical wiring, if you didn’t do it alrea
 | 7	| TDI | GPIO24 / pin18 |
 | 8	| TMS / SWDIO | GPIO25 / pin22 |
 
-#### ICSP 6-Pin Row (for Picberry):
+#### ICSP 6-Pin Row (for Picberry)
 
 | Connector pin | Connection name | Raspberry Pi GPIO / pin |
 | :-----------: | :-------------: | :---------------------: |
@@ -227,7 +227,7 @@ The last thing to now is, to do the physical wiring, if you didn’t do it alrea
 | 5	| PGC | GPIO5 / pin30 |
 | 6	| none | none |
  
-#### ICSP RJ11 (for Picberry):
+#### ICSP RJ11 (for Picberry)
 
 | Connector pin | Connection name | Raspberry Pi GPIO / pin |
 | :-----------: | :-------------: | :---------------------: |
@@ -245,6 +245,8 @@ You can see the pinout for the Raspberry Pi here: https://pinout.xyz/ or you can
 ## Adding the logger device
 
 The logger firmware was written for Arduino, so you need an Arduino microcontroller board.
+
+Note, that the software was written for an Arduino Uno, some parts of it might not work with other Arduino boards. If you want to use a different Arduino board, you will probably have to modify the firmware. 
 
 If you did not already, download the Arduino Ide from here: https://www.arduino.cc/en/main/software, load the sketch from the `uart_logger` folder in the `firmware` folder and programm your Arduino board with it. A turtorial how to programm an Arduino Board can be found here: https://www.arduino.cc/en/Guide/Environment#toc9
 

@@ -10,14 +10,20 @@ PICBERRY, openOCD and pymcuprog are used.
 
 # Contents
 
-* [Setup RaspiPgmLog](#setup-raspipgmlog)
-    * [Initial setup](#initial-setup)
-    * [Setup via the setupscript](#setup-via-setupscript)
-    * [Setup by hand](#setup-by-hand)
-    * [Final Configuration](#final-configuration)
-    * [Wiring it up](#wiring-it-up)
-    * [Adding the logger device](#adding-the-logger-device)
-* [Setup InkyPHAT display](#setup-inkyphat-display)
+- [RaspiPgmLog](#raspipgmlog)
+  - [a Raspberrypi to in circuit serial program (ICSP) Microchip microcontrollers through the ICSP and JTAG Interface. (SNAP may be supported in the future)](#a-raspberrypi-to-in-circuit-serial-program-icsp-microchip-microcontrollers-through-the-icsp-and-jtag-interface-snap-may-be-supported-in-the-future)
+- [Contents](#contents)
+- [Setup RaspiPgmLog](#setup-raspipgmlog)
+  - [Initial setup](#initial-setup)
+  - [Setup via setup-script](#setup-via-setup-script)
+  - [Setup by hand](#setup-by-hand)
+  - [Final configuration](#final-configuration)
+  - [Wiring it up](#wiring-it-up)
+      - [Jtag / SWD (for OpenOCD):](#jtag--swd-for-openocd)
+      - [ICSP 6-Pin Row (for Picberry):](#icsp-6-pin-row-for-picberry)
+      - [ICSP RJ11 (for Picberry):](#icsp-rj11-for-picberry)
+  - [Adding the logger device](#adding-the-logger-device)
+- [Setup InkyPHAT Display](#setup-inkyphat-display)
 
 # Setup RaspiPgmLog
 
@@ -252,7 +258,7 @@ Now you need to connect the Arduino board to the Raspberry Pi over their serial 
 | Name | TXD <br> RXD | RXD <br> TXD |
 | Pin | D1 <br> D0 | GPIO15 (10) <br> GPIO14 (8) |
 
-Currently, the logger device will just send dummy data. The full functionality will be added in a later patch. 
+The Arduino will now send the data from six analogue ports and the status of five digital pwm pins, that are configured to output pwm signals. The pins can be controlled from the graph page on the website. 
 
 If you followed this documentation closely, everything should work now.
 

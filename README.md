@@ -1,6 +1,6 @@
-# RaspiPgmLog
+# RaspiPgmLog <!-- omit in toc -->
 
-## a Raspberrypi to in circuit serial program (ICSP) Microchip microcontrollers through the ICSP and JTAG Interface. (SNAP may be supported in the future)
+## a Raspberrypi to in circuit serial program (ICSP) Microchip microcontrollers through the ICSP and JTAG Interface. (SNAP may be supported in the future) <!-- omit in toc -->
 
 Additionally an Arduino can be connected to the Raspberrypi for datalogging.
 RaspiPgmLog uses a web based userinterface which allows to use any kind of browser to upload a HEX file to program the device and to visualize the logged data.	
@@ -8,16 +8,19 @@ RaspiPgmLog uses a web based userinterface which allows to use any kind of brows
 Due to the Raspberry's WIFI interface this solution allows a simple way of isolation between the PC and the target application.
 PICBERRY, openOCD and pymcuprog are used.
 
-# Contents
+# Content <!-- omit in toc -->
 
-* [Setup RaspiPgmLog](#setup-raspipgmlog)
-    * [Initial setup](#initial-setup)
-    * [Setup via the setupscript](#setup-via-setupscript)
-    * [Setup by hand](#setup-by-hand)
-    * [Final Configuration](#final-configuration)
-    * [Wiring it up](#wiring-it-up)
-    * [Adding the logger device](#adding-the-logger-device)
-* [Setup InkyPHAT display](#setup-inkyphat-display)
+- [Setup RaspiPgmLog](#setup-raspipgmlog)
+  - [Initial setup](#initial-setup)
+  - [Setup via setup-script](#setup-via-setup-script)
+  - [Setup by hand](#setup-by-hand)
+  - [Final configuration](#final-configuration)
+  - [Wiring it up](#wiring-it-up)
+      - [Jtag / SWD (for OpenOCD)](#jtag--swd-for-openocd)
+      - [ICSP 6-Pin Row (for Picberry)](#icsp-6-pin-row-for-picberry)
+      - [ICSP RJ11 (for Picberry)](#icsp-rj11-for-picberry)
+  - [Adding the logger device](#adding-the-logger-device)
+- [Setup InkyPHAT Display](#setup-inkyphat-display)
 
 # Setup RaspiPgmLog
 
@@ -200,7 +203,7 @@ The last thing to now is, to do the physical wiring, if you didn’t do it alrea
 
 ## Wiring it up
 
-#### Jtag / SWD (for OpenOCD):
+#### Jtag / SWD (for OpenOCD)
 
 | Connector pin | Connection name | Raspberry Pi GPIO / pin |
 | :-----------: | :-------------: | :---------------------: |
@@ -213,7 +216,7 @@ The last thing to now is, to do the physical wiring, if you didn’t do it alrea
 | 7	| TDI | GPIO24 / pin18 |
 | 8	| TMS / SWDIO | GPIO25 / pin22 |
 
-#### ICSP 6-Pin Row (for Picberry):
+#### ICSP 6-Pin Row (for Picberry)
 
 | Connector pin | Connection name | Raspberry Pi GPIO / pin |
 | :-----------: | :-------------: | :---------------------: |
@@ -224,7 +227,7 @@ The last thing to now is, to do the physical wiring, if you didn’t do it alrea
 | 5	| PGC | GPIO5 / pin30 |
 | 6	| none | none |
  
-#### ICSP RJ11 (for Picberry):
+#### ICSP RJ11 (for Picberry)
 
 | Connector pin | Connection name | Raspberry Pi GPIO / pin |
 | :-----------: | :-------------: | :---------------------: |
@@ -243,6 +246,8 @@ You can see the pinout for the Raspberry Pi here: https://pinout.xyz/ or you can
 
 The logger firmware was written for Arduino, so you need an Arduino microcontroller board.
 
+Note, that the software was written for an Arduino Uno, some parts of it might not work with other Arduino boards. If you want to use a different Arduino board, you will probably have to modify the firmware. 
+
 If you did not already, download the Arduino Ide from here: https://www.arduino.cc/en/main/software, load the sketch from the `uart_logger` folder in the `firmware` folder and programm your Arduino board with it. A turtorial how to programm an Arduino Board can be found here: https://www.arduino.cc/en/Guide/Environment#toc9
 
 Now you need to connect the Arduino board to the Raspberry Pi over their serial ports:
@@ -252,7 +257,7 @@ Now you need to connect the Arduino board to the Raspberry Pi over their serial 
 | Name | TXD <br> RXD | RXD <br> TXD |
 | Pin | D1 <br> D0 | GPIO15 (10) <br> GPIO14 (8) |
 
-Currently, the logger device will just send dummy data. The full functionality will be added in a later patch. 
+The Arduino will now send the data from six analogue ports and the status of five digital pwm pins, that are configured to output pwm signals. The pins can be controlled from the graph page on the website. 
 
 If you followed this documentation closely, everything should work now.
 

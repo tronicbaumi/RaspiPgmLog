@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# print the help in a callable function
 usage(){
 	cat << EO
 Install script for RaspiPgmLog
@@ -25,16 +26,20 @@ OPTIND=1         # Reset in case getopts has been used previously in the shell.
 device=""
 use_display=1
 
+# define commandline options
 SHORTOPTS="h"
 LONGOPTS="help,no-display,device:"
 
+# get command line options
 ARGS=$(getopt -s bash --options $SHORTOPTS --longoptions $LONGOPTS --name RaspiPgmLog-Installer -- "$@")
 
+# error handling on input options
 if [ $? -ne 0 ] ; then echo "Invalid Option provided...exiting." >&2 ; exit 1 ; fi
 
 eval set -- "$ARGS"
 unset ARGS
 
+# parse options and set internal variables
 while true ; do
     case $1 in
     	-h|--help) 
@@ -67,11 +72,14 @@ done
 
 echo "use_display=$use_display, device='$device'"
 
+# additional validation
 if [ "$device" != "rpizero" ] && [ "$device" != "rpi2" ] ; then
 	echo "unknown device! Allowed options are: rpizero, rpi2";
 	exit 1;
 fi
 
+# the actual installation process
+# all of that is documented in the README.md in the top folder
 cd /home/pi
 
 apt-get update

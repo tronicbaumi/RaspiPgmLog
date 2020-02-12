@@ -1,22 +1,26 @@
 #!bin/bash
 
+# make all needed directories, they are not saved in the git, because they are empty at the start
 mkdir /home/pi/raspipgmlog/software/src/uploads
 mkdir /home/pi/raspipgmlog/software/src/downloads
 mkdir /home/pi/raspipgmlog/software/src/downloads/logs
 mkdir /home/pi/raspipgmlog/software/src/downloads/read_files
 mkdir /home/pi/raspipgmlog/software/src/downloads/timeplots
-echo "copied source files"
+echo "made needed directories"
 
+# make the server files have the right owner
 chown -R pi:pi /home/pi/raspipgmlog/software/src
 echo "adjusted ownerships"
 
-chmod -R 777 /home/pi/raspipgmlog/software/src/upload
+# give additional read and write rights to the pi user
+chmod -R 777 /home/pi/raspipgmlog/software/src/uploads
 chmod -R 777 /home/pi/raspipgmlog/software/src/downloads
 chmod -R 777 /home/pi/raspipgmlog/software/src/downloads/logs
 chmod -R 777 /home/pi/raspipgmlog/software/src/downloads/read_files
 chmod -R 777 /home/pi/raspipgmlog/software/src/downloads/timeplots
 echo "adjusted rights"
 
+# add the server service to the systemctl, so it is started on every restart of the raspi automaticly
 cp node_server.service /etc/systemd/system/
 systemctl daemon-reload
 systemctl enable node_server.service

@@ -254,8 +254,12 @@ Now you need to connect the Arduino board to the Raspberry Pi over their serial 
 
 |   | Arduino Uno | Raspberry Pi |
 |---|:-----------:|:------------:|
-| Name | TXD <br> RXD | RXD <br> TXD |
-| Pin | D1 <br> D0 | GPIO15 (10) <br> GPIO14 (8) |
+| Name | TXD <br> RXD <br> GND <br> Vin | RXD <br> TXD <br> GND <br> 5V |
+| Pin | D1 <br> D0 <br> GND <br> Vin | GPIO15 (10) <br> GPIO14 (8) <br> GND (6) <br> +5V (4) |
+
+Be sure to put a voltage divider between the TXD of the Arduino and the RXD of the Raspberry Pi, to shift down the 5 volt of the Arduino to 3.3 volt, as the Raspberry Pi operates on 3.3 volt and might get damaged. To assemble the voltage divider, look at the shematic below:
+
+![voltage_divider_shematic](circuit.png)
 
 The Arduino will now send the data from six analogue ports and the status of five digital pwm pins, that are configured to output pwm signals. The pins can be controlled from the graph page on the website. 
 

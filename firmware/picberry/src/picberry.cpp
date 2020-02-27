@@ -107,7 +107,7 @@ int main(int argc, char *argv[])
             {"gpio",        required_argument, 0,           'g'},
             {"family",      required_argument, 0,           'f'},
             {"read",        required_argument, 0,           'r'},
-            {"write",       no_argument,       0,           'w'},
+            {"write",       required_argument, 0,           'w'},
             {"erase",       no_argument,       0,           'e'},
             {"blankcheck",  no_argument,       0,           'b'},
             {"regdump",     no_argument,       0,           'd'},

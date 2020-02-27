@@ -19,7 +19,7 @@ font = ImageFont.truetype("/home/pi/.local/resources/NotoMono-Regular.ttf",12)
 img = Image.new("L", (212,104), 0)
 draw = ImageDraw.Draw(img)
 draw.text((10,30), "Hostname: " + hostname, display.BLACK, font=font)
-draw.text((10,50), "Ip: " + ip, display.BLACK, font=font)
+draw.text((10,50), "Ip: " + ip + ":3000", display.BLACK, font=font)
 
 display.set_image(img)
 display.show()

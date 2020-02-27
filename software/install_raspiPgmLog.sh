@@ -88,15 +88,17 @@ apt-get dist-upgrade -y
 apt-get install python3 python3-pip git autoconf libtool make pkg-config libusb-1.0-0 libusb-1.0-0-dev -y
 pip3 install pyserial
 if [ "$device" = "rpizero" ] ; then
+	mv node_server_zero.service node_server.service
 	echo "installing node js for armvl6";
 	wget https://nodejs.org/download/release/v11.15.0/node-v11.15.0-linux-armv6l.tar.gz
 	tar -xzf node-v11.15.0-linux-armv6l.tar.gz
 	cd node-v11.15.0-linux-armv6l/
 	cp -R * /usr/local/
 else
+	mv node_server_2.service node_server.service
 	echo "installing node js for armvl7/armvl8";
-	curl -sL https://deb.nodesource.com/setup_13.x | -E bash –
-	apt-get install -y nodejs
+	curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash –
+	apt install -y nodejs
 fi
 
 cd /home/pi/

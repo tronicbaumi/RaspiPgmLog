@@ -82,7 +82,7 @@ Now the raspi is up to date and configure, now we need to install all dependenci
 Type in command line:
 
 ```bash
-sudo apt-get install python3 python3-pip git autoconf libtool make pkg-config libusb-1.0-0 libusb-1.0-0-dev -y
+sudo apt-get install python3 python3-pip git autoconf libtool make pkg-config libusb-1.0-0 libusb-1.0-0-dev expect -y
 pip3 install pyserial
 ```
 

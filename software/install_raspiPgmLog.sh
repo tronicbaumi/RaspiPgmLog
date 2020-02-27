@@ -84,7 +84,7 @@ fi
 apt-get update
 apt-get upgrade -y
 apt-get dist-upgrade -y
-apt-get install python3 python3-pip git autoconf libtool make pkg-config libusb-1.0-0 libusb-1.0-0-dev -y
+apt-get install python3 python3-pip git autoconf libtool make pkg-config libusb-1.0-0 libusb-1.0-0-dev expect -y
 pip3 install pyserial
 if [ "$device" = "rpizero" ] ; then
 	mv node_server_zero.service node_server.service

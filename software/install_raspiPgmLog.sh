@@ -97,7 +97,7 @@ if [ "$device" = "rpizero" ] ; then
 else
 	mv node_server_2.service node_server.service
 	echo "installing node js for armvl7/armvl8";
-	curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash –
+	curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
 	apt install -y nodejs
 fi
 

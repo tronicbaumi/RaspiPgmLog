@@ -89,6 +89,7 @@ pip3 install pyserial
 if [ "$device" = "rpizero" ] ; then
 	mv node_server_zero.service node_server.service
 	echo "installing node js for armvl6";
+	cd /home/pi/
 	wget https://nodejs.org/download/release/v11.15.0/node-v11.15.0-linux-armv6l.tar.gz
 	tar -xzf node-v11.15.0-linux-armv6l.tar.gz
 	cd node-v11.15.0-linux-armv6l/

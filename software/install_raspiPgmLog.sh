@@ -80,7 +80,6 @@ fi
 
 # the actual installation process
 # all of that is documented in the README.md in the top folder
-cd /home/pi
 
 apt-get update
 apt-get upgrade -y

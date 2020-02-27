@@ -11,8 +11,9 @@ SRCDIR = src
 BUILDDIR = build
 MKDIR = mkdir -p
 
-DEVICES = $(BUILDDIR)/devices/dspic33e.o \
+DEVICES = $(BUILDDIR)/devices/dspic33epXXXmu.o \
 		  $(BUILDDIR)/devices/dspic33f.o \
+		  $(BUILDDIR)/devices/dspic33ep.o \
 		  $(BUILDDIR)/devices/dspic33ck.o \
 		  $(BUILDDIR)/devices/pic10f322.o \
 		  $(BUILDDIR)/devices/pic18fj.o \

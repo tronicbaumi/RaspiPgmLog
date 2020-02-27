@@ -67,7 +67,7 @@ function SocketCallbacks(io, spawn, path, performance, fs){
         // prepare programming action
         switch (params.action) {
             case 'write':
-                action = 'write="' + self.target_dir + params.file;
+                action = 'write=' + self.target_dir + params.file;
                 break;
             case 'read':
                 action = 'read='+ read_file + '.hex';

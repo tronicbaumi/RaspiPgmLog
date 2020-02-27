@@ -49,6 +49,7 @@ If you want to install everything by hand, skip to [setup by hand](#setup-by-han
 Type in your command line:
 
 ```bash
+sudo apt-get update
 sudo apt-get install git
 git clone https://github.com/tronicbaumi/RaspiPgmLog.git raspipgmlog
 cd raspipgmlog/software/

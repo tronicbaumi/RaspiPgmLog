@@ -67,13 +67,13 @@ function SocketCallbacks(io, spawn, path, performance, fs){
         // prepare programming action
         switch (params.action) {
             case 'write':
-                action = 'w ' + params.file;
+                action = 'write="' + self.target_dir + params.file;
                 break;
             case 'read':
-                action = 'r '+ read_file + '.hex';
+                action = 'read='+ read_file + '.hex';
                 break;
             default:
-                action = '-' + params.action;
+                action = params.action;
                 break;
         }
 
@@ -87,7 +87,7 @@ function SocketCallbacks(io, spawn, path, performance, fs){
         // assemble command
         //command = 'picberry -' + action + ' --gpio=' + gpios + ' --family='  + params.family + ' ' + option;
         command.cmd = "picberry";
-        command.args = ['-' + action, '--gpio=' + gpios, '--family='  + params.family, option];
+        command.args = ['--' + action, '--gpio=' + gpios, '--family='  + params.family, option];
         
         break;
 

@@ -92,50 +92,52 @@ function SocketCallbacks(io, spawn, path, performance, fs){
         break;
 
       case "openocd":
-        var driver_specific = "";
-        var action = "";
+
+        command.args = ['-f', 'rpi.cfg', '-f', self.path.join('targets', params.family),  '-f', 'openocd.cfg'];
 
         // prepare driver specific part
-        switch(params.family){
-          case "atsame5x.cfg":
-            driver_specific = '-c "atsame5 chip-erase" -c "atsame5 bootloader 0';
-            break;
-          case "at91samdXX.cfg":
-            driver_specific = '-c "atsame5 chip-erase" -c "atsame5 bootloader 0';
-            break;
-          case "atsamv.cfg":
-            driver_specific = '-c "flash erase_sector 0 0 0"';
-            break;
+        if(params.action === "write" || params.action === "erase"){
+          switch(params.family){
+            case "atsame5x.cfg":
+              command.args.push('-c', '"atsame5 chip-erase"', '-c', '"atsame5 bootloader 0"');
+              break;
+            case "at91samdXX.cfg":
+              command.args.push('-c', '"atsame5 chip-erase"', '-c', '"atsame5 bootloader 0"');
+              break;
+            case "atsamv.cfg":
+              command.args.push('-c', '"flash erase_sector 0 0 0"');
+              break;
+          }
         }
 
         // prepare programming action
         switch (params.action) {
             case 'write': 
-                action = driver_specific + ' -c "flash write_image ' + params.file + '" '; //-c "verify_image ' + params.file + ' 0x00000000" 
+                command.args.push('-c', '"flash write_image ' + params.file + '"'); //-c "verify_image ' + params.file + ' 0x00000000" 
                 break;
             case 'read':
-                action = '-c "flash read_bank 0 ' + read_file + '.bin" ';
+                command.args.push('-c "flash read_bank 0 ' + read_file + '.bin" ');
                 break;
             case 'erase':
-                action = driver_specific + ' -c "flash erase_check 0" ';
+                command.args.push('-c', '"flash erase_check 0"');
                 break;
             case 'probe':
-                action = '-c "flash probe 0" ';
+                command.args.push('-c', '"flash probe 0"');
                 break;
             case 'info':
-                action = '-c " flash info 0" ';
+                command.args.push('-c', '"flash info 0"');
                 break;
             case 'list':
-                action = '-c "flash list" ';
+                command.args.push('-c', '"flash list"');
                 break;
             case 'banks':
-                action = '-c "flash banks" ';
+                command.args.push('-c', '"flash banks"');
                 break;  
         }
 
+        command.args.push('-c', '"reset run"', '-c', '"shutdown"');
         // assemble command
         command.cmd = "openocd";
-        command.args = ['-f', 'rpi.cfg', '-f', self.path.join('targets', params.family),  '-f', 'openocd.cfg', action, '-c', '"reset run"', '-c', '"shutdown"'];
         command.options = {
           cwd: self.path.join(__dirname, "OpenocdCustomConfigFiles")
         }

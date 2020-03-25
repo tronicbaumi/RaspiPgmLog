@@ -103,7 +103,7 @@ fi
 
 cd /home/pi/
 
-git clone https://git.code.sf.net/p/openocd/code openocd-code
+git clone https://github.com/tronicbaumi/RaspiPgmLog_openOCD.git openocd-code
 cd openocd-code/
 ./bootstrap
 ./configure --enable-sysfsgpio --enable-bcm2835gpio

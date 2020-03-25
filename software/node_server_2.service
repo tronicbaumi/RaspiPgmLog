@@ -1,0 +1,12 @@
+[Unit]
+Description=Start Node Server
+After=multi-user.target
+
+[Service]
+WorkingDirectory=/home/pi/raspipgmlog/software/src
+ExecStart=/usr/bin/npm start
+Restart=on-failure
+User=root
+
+[Install]
+WantedBy=multi-user.target

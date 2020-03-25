@@ -99,13 +99,13 @@ function SocketCallbacks(io, spawn, path, performance, fs){
         if(params.action === "write" || params.action === "erase"){
           switch(params.family){
             case "atsame5x.cfg":
-              command.args.push('-c', '"atsame5 chip-erase"', '-c', '"atsame5 bootloader 0"');
+              command.args.push('-c', 'atsame5 chip-erase', '-c', 'atsame5 bootloader 0');
               break;
             case "at91samdXX.cfg":
-              command.args.push('-c', '"atsame5 chip-erase"', '-c', '"atsame5 bootloader 0"');
+              command.args.push('-c', 'atsame5 chip-erase', '-c', 'atsame5 bootloader 0');
               break;
             case "atsamv.cfg":
-              command.args.push('-c', '"flash erase_sector 0 0 0"');
+              command.args.push('-c', 'flash erase_sector 0 0 0');
               break;
           }
         }
@@ -113,29 +113,29 @@ function SocketCallbacks(io, spawn, path, performance, fs){
         // prepare programming action
         switch (params.action) {
             case 'write': 
-                command.args.push('-c', '"flash write_image ' + params.file + '"'); //-c "verify_image ' + params.file + ' 0x00000000" 
+                command.args.push('-c', 'flash write_image ' + self.target_dir + params.file); //-c "verify_image ' + params.file + ' 0x00000000" 
                 break;
             case 'read':
-                command.args.push('-c "flash read_bank 0 ' + read_file + '.bin" ');
+                command.args.push('-c', 'flash read_bank 0 ' + read_file + '.bin');
                 break;
             case 'erase':
-                command.args.push('-c', '"flash erase_check 0"');
+                command.args.push('-c', 'flash erase_check 0');
                 break;
             case 'probe':
-                command.args.push('-c', '"flash probe 0"');
+                command.args.push('-c', 'flash probe 0');
                 break;
             case 'info':
-                command.args.push('-c', '"flash info 0"');
+                command.args.push('-c', 'flash info 0');
                 break;
             case 'list':
-                command.args.push('-c', '"flash list"');
+                command.args.push('-c', 'flash list');
                 break;
             case 'banks':
-                command.args.push('-c', '"flash banks"');
+                command.args.push('-c', 'flash banks');
                 break;  
         }
 
-        command.args.push('-c', '"reset run"', '-c', '"shutdown"');
+        command.args.push('-c', 'reset run', '-c', 'shutdown');
         // assemble command
         command.cmd = "openocd";
         command.options = {

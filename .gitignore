@@ -1,0 +1,5 @@
+node_server.service
+node_modules
+rpi.cfg
+uploads
+downloads

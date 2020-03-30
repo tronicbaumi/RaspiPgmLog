@@ -105,7 +105,7 @@ void loop() {
   // set the pins of the Arduino to the values, that are saved in the array
   for(int i = 0; i < 14; i++){
     if(DO[i] > 0){
-      analogWrite(i, DO[i]);
+      analogWrite(i, DO[i]/4);
     }else{
       digitalWrite(i, LOW);
     }

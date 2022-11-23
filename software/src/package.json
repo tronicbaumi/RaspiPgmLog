@@ -17,6 +17,6 @@
     "express": "^4.17.1",
     "express-session": "^1.17.0",
     "formidable": "^1.2.1",
-    "socket.io": "^2.3.0"
+    "socket.io": "^2.5.0"
   }
 }
